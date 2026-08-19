@@ -8,11 +8,18 @@ let prisma: PrismaClient;
 
 if (!globalForPrisma.prisma) {
   const connectionString = process.env.DATABASE_URL;
-  const isLocal = connectionString?.includes("localhost") || connectionString?.includes("127.0.0.1");
+  if (!connectionString) {
+    throw new Error("CRITICAL: DATABASE_URL environment variable is missing on hosting server!");
+  }
+
+  const isLocal = connectionString.includes("localhost") || connectionString.includes("127.0.0.1");
   
   const pool = new Pool({
     connectionString,
     ssl: isLocal ? undefined : { rejectUnauthorized: false },
+    max: 2, // Prevent serverless functions from exhausting database connection limits
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 5000,
   });
   
   const adapter = new PrismaPg(pool);
