@@ -62,6 +62,7 @@ export default function HomePage() {
   const [authError, setAuthError] = useState("");
   const [authSuccess, setAuthSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
 
   // Fetch current session and public events
   const loadData = async () => {
@@ -104,7 +105,20 @@ export default function HomePage() {
     setSubmitting(true);
 
     try {
-      if (isLoginTab) {
+      if (isForgotPassword) {
+        // Reset password request
+        const res = await fetch("/api/participant/reset-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Reset password failed");
+
+        setAuthSuccess("Password reset successfully! Log in with your new password.");
+        setIsForgotPassword(false);
+        setPassword("");
+      } else if (isLoginTab) {
         // Login request
         const res = await fetch("/api/participant/login", {
           method: "POST",
@@ -194,84 +208,147 @@ export default function HomePage() {
           </div>
 
           <div className="card" style={{ padding: "2rem" }}>
-            {/* Tabs */}
-            <div style={{ display: "flex", borderBottom: "1px solid var(--border)", marginBottom: "1.5rem" }}>
-              <button
-                type="button"
-                onClick={() => { setIsLoginTab(true); setAuthError(""); setAuthSuccess(""); }}
-                style={{ flex: 1, paddingBottom: "0.75rem", fontWeight: 600, fontSize: "0.95rem", color: isLoginTab ? "var(--primary-light)" : "var(--text-muted)", borderBottom: isLoginTab ? "2px solid var(--primary)" : "none" }}
-              >
-                Sign In
-              </button>
-              <button
-                type="button"
-                onClick={() => { setIsLoginTab(false); setAuthError(""); setAuthSuccess(""); }}
-                style={{ flex: 1, paddingBottom: "0.75rem", fontWeight: 600, fontSize: "0.95rem", color: !isLoginTab ? "var(--primary-light)" : "var(--text-muted)", borderBottom: !isLoginTab ? "2px solid var(--primary)" : "none" }}
-              >
-                Sign Up
-              </button>
-            </div>
+            {isForgotPassword ? (
+              <div>
+                <h3 style={{ fontSize: "1.3rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.5rem" }}>Forgot Password?</h3>
+                <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginBottom: "1.5rem" }}>
+                  Enter your email address and a new password below to update your account credentials.
+                </p>
 
-            {authError && <div className="alert alert-error" style={{ marginBottom: "1rem", fontSize: "0.85rem" }}>{authError}</div>}
-            {authSuccess && <div className="alert alert-success" style={{ marginBottom: "1rem", fontSize: "0.85rem" }}>{authSuccess}</div>}
+                {authError && <div className="alert alert-error" style={{ marginBottom: "1rem", fontSize: "0.85rem" }}>{authError}</div>}
+                {authSuccess && <div className="alert alert-success" style={{ marginBottom: "1rem", fontSize: "0.85rem" }}>{authSuccess}</div>}
 
-            <form onSubmit={handleAuthSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              {!isLoginTab && (
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label className="form-label">Full Name</label>
-                  <input
-                    className="form-control"
-                    placeholder="Enter your name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
-                </div>
-              )}
+                <form onSubmit={handleAuthSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">Email Address</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder="Enter registered email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
 
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Email Address</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="e.g. name@college.edu"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">New Password</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="Enter new password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <button type="submit" className="btn btn-primary btn-block" style={{ marginTop: "0.75rem" }} disabled={submitting}>
+                    {submitting ? <span className="loading-spinner" /> : "Update Password"}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-block"
+                    onClick={() => { setIsForgotPassword(false); setAuthError(""); setAuthSuccess(""); }}
+                  >
+                    Cancel
+                  </button>
+                </form>
               </div>
-
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-
-              {isLoginTab && (
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.25rem" }}>
-                  <input
-                    type="checkbox"
-                    id="remember"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    style={{ accentColor: "var(--primary)" }}
-                  />
-                  <label htmlFor="remember" style={{ fontSize: "0.85rem", color: "var(--text-secondary)", cursor: "pointer" }}>
-                    Remember my email
-                  </label>
+            ) : (
+              <div>
+                {/* Tabs */}
+                <div style={{ display: "flex", borderBottom: "1px solid var(--border)", marginBottom: "1.5rem" }}>
+                  <button
+                    type="button"
+                    onClick={() => { setIsLoginTab(true); setAuthError(""); setAuthSuccess(""); }}
+                    style={{ flex: 1, paddingBottom: "0.75rem", fontWeight: 600, fontSize: "0.95rem", color: isLoginTab ? "var(--primary-light)" : "var(--text-muted)", borderBottom: isLoginTab ? "2px solid var(--primary)" : "none" }}
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setIsLoginTab(false); setAuthError(""); setAuthSuccess(""); }}
+                    style={{ flex: 1, paddingBottom: "0.75rem", fontWeight: 600, fontSize: "0.95rem", color: !isLoginTab ? "var(--primary-light)" : "var(--text-muted)", borderBottom: !isLoginTab ? "2px solid var(--primary)" : "none" }}
+                  >
+                    Sign Up
+                  </button>
                 </div>
-              )}
 
-              <button type="submit" className="btn btn-primary btn-block" style={{ marginTop: "1rem" }} disabled={submitting}>
-                {submitting ? <span className="loading-spinner" /> : isLoginTab ? "Sign In" : "Create Account"}
-              </button>
-            </form>
+                {authError && <div className="alert alert-error" style={{ marginBottom: "1rem", fontSize: "0.85rem" }}>{authError}</div>}
+                {authSuccess && <div className="alert alert-success" style={{ marginBottom: "1rem", fontSize: "0.85rem" }}>{authSuccess}</div>}
+
+                <form onSubmit={handleAuthSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  {!isLoginTab && (
+                    <div className="form-group" style={{ marginBottom: 0 }}>
+                      <label className="form-label">Full Name</label>
+                      <input
+                        className="form-control"
+                        placeholder="Enter your name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                      />
+                    </div>
+                  )}
+
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">Email Address</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder="e.g. name@college.edu"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.35rem" }}>
+                      <label className="form-label" style={{ marginBottom: 0 }}>Password</label>
+                      {isLoginTab && (
+                        <button
+                          type="button"
+                          onClick={() => { setIsForgotPassword(true); setAuthError(""); setAuthSuccess(""); }}
+                          style={{ background: "none", border: "none", color: "var(--primary-light)", fontSize: "0.78rem", cursor: "pointer", padding: 0 }}
+                        >
+                          Forgot Password?
+                        </button>
+                      )}
+                    </div>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  {isLoginTab && (
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.25rem" }}>
+                      <input
+                        type="checkbox"
+                        id="remember"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                        style={{ accentColor: "var(--primary)" }}
+                      />
+                      <label htmlFor="remember" style={{ fontSize: "0.85rem", color: "var(--text-secondary)", cursor: "pointer" }}>
+                        Remember my email
+                      </label>
+                    </div>
+                  )}
+
+                  <button type="submit" className="btn btn-primary btn-block" style={{ marginTop: "1rem" }} disabled={submitting}>
+                    {submitting ? <span className="loading-spinner" /> : isLoginTab ? "Sign In" : "Create Account"}
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       </div>
