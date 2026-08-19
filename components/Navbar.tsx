@@ -2,20 +2,34 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/participant/me")
+      .then((r) => r.json())
+      .then((d) => {
+        setIsLoggedIn(!!d.user);
+      });
+  }, [pathname]);
 
   const isAdmin = pathname?.startsWith("/admin");
   if (isAdmin) return null;
 
   const links = [
     { href: "/", label: "Home" },
-    { href: "/events", label: "Events" },
-    { href: "/register", label: "Register" },
-    { href: "/dashboard", label: "My Registration" },
+    ...(isLoggedIn
+      ? [
+          { href: "/events", label: "Events" },
+          { href: "/register", label: "Register" },
+          { href: "/dashboard", label: "My Registration" },
+        ]
+      : []),
     { href: "/contact", label: "About" },
   ];
 
@@ -42,9 +56,15 @@ export default function Navbar() {
         </ul>
 
         <div className={`nav-cta${menuOpen ? " open" : ""}`}>
-          <Link href="/register" className="btn btn-primary btn-sm">
-            Register Now
-          </Link>
+          {isLoggedIn ? (
+            <Link href="/register" className="btn btn-primary btn-sm">
+              Register Now
+            </Link>
+          ) : (
+            <Link href="/" className="btn btn-primary btn-sm">
+              Sign In
+            </Link>
+          )}
         </div>
 
         <button

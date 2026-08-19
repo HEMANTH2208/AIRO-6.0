@@ -146,7 +146,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const cookieStore = await cookies();
+  const session = cookieStore.get("participant_session")?.value;
+  if (!session) {
+    redirect("/");
+  }
+
   const { slug } = await params;
   const event = await getEvent(slug);
   if (!event) notFound();

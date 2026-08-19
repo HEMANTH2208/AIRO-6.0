@@ -20,6 +20,7 @@ interface Team {
   college_name: string;
   department: string;
   registered_at: string;
+  checked_in?: number;
   participants: Participant[];
 }
 
@@ -28,7 +29,7 @@ export default function AdminTeamsPage() {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ event: "", college: "", department: "", team_name: "" });
   const [editTeam, setEditTeam] = useState<Team | null>(null);
-  const [editForm, setEditForm] = useState({ team_name: "", college_name: "", department: "" });
+  const [editForm, setEditForm] = useState({ team_name: "", college_name: "", department: "", checked_in: false });
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [expanded, setExpanded] = useState<number | null>(null);
@@ -47,7 +48,12 @@ export default function AdminTeamsPage() {
 
   const openEdit = (t: Team) => {
     setEditTeam(t);
-    setEditForm({ team_name: t.team_name, college_name: t.college_name, department: t.department });
+    setEditForm({
+      team_name: t.team_name,
+      college_name: t.college_name,
+      department: t.department,
+      checked_in: !!t.checked_in,
+    });
   };
 
   const handleSave = async () => {
@@ -175,6 +181,16 @@ export default function AdminTeamsPage() {
               <div className="form-group">
                 <label className="form-label">Department</label>
                 <input className="form-control" value={editForm.department} onChange={(e) => setEditForm((f) => ({ ...f, department: e.target.value }))} />
+              </div>
+              <div className="form-group" style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "1rem" }}>
+                <input
+                  type="checkbox"
+                  id="edit-checked-in"
+                  checked={editForm.checked_in}
+                  onChange={(e) => setEditForm((f) => ({ ...f, checked_in: e.target.checked }))}
+                  style={{ width: "auto", margin: 0, accentColor: "var(--primary)" }}
+                />
+                <label htmlFor="edit-checked-in" className="form-label" style={{ marginBottom: 0, cursor: "pointer" }}>Checked In</label>
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" onClick={() => setEditTeam(null)}>Cancel</button>

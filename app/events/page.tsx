@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 interface Event {
   id: number;
   name: string;
@@ -51,6 +54,12 @@ async function getEvents(): Promise<Event[]> {
 }
 
 export default async function EventsPage() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get("participant_session")?.value;
+  if (!session) {
+    redirect("/");
+  }
+
   const events = await getEvents();
 
   return (

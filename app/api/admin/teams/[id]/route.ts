@@ -54,10 +54,9 @@ export async function PUT(
     const session = await auth();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const { id } = await params;
-    const body = await req.json();
-    const { team_name, college_name, department } = body;
+    const { team_name, college_name, department, checked_in } = await req.json();
 
-    await prisma.team.update({
+    const team = await prisma.team.update({
       where: { id: Number(id) },
       data: {
         team_name,
@@ -65,6 +64,16 @@ export async function PUT(
         department,
       },
     });
+
+    if (checked_in !== undefined) {
+      await prisma.registration.update({
+        where: { team_id: team.id },
+        data: {
+          checked_in: checked_in ? 1 : 0,
+          checked_in_at: checked_in ? new Date() : null,
+        },
+      });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

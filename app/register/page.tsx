@@ -38,25 +38,49 @@ function RegisterForm() {
   const [members, setMembers] = useState<Member[]>([{ ...emptyMember(), is_team_lead: true }, emptyMember()]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/events")
+    setLoading(true);
+    fetch("/api/participant/me")
       .then((r) => r.json())
-      .then((d) => {
-        const active = (d.events || []).filter((e: Event) => e.status === "active");
-        setEvents(active);
-        const preselect = searchParams.get("event");
-        if (preselect) {
-          const found = active.find((e: Event) => String(e.id) === preselect);
-          if (found) {
-            setSelectedEvent(found);
-            initMembersForEvent(found);
-            setStep("team");
-          }
+      .then((data) => {
+        if (!data.user) {
+          router.replace("/");
+          return;
         }
+
+        // Pre-fill lead details
+        setMembers((prev) => {
+          const updated = [...prev];
+          if (updated[0]) {
+            updated[0].name = data.user.name;
+            updated[0].email = data.user.email;
+          }
+          return updated;
+        });
+
+        fetch("/api/events")
+          .then((r) => r.json())
+          .then((d) => {
+            const active = (d.events || []).filter((e: Event) => e.status === "active");
+            setEvents(active);
+            const preselect = searchParams.get("event");
+            if (preselect) {
+              const found = active.find((e: Event) => String(e.id) === preselect);
+              if (found) {
+                setSelectedEvent(found);
+                initMembersForEvent(found);
+                setStep("team");
+              }
+            }
+          })
+          .finally(() => setLoading(false));
+      })
+      .catch(() => {
+        router.replace("/");
       });
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   const initMembersForEvent = useCallback((event: Event) => {
     const count = event.min_team_size;
