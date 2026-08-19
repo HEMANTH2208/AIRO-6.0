@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
 export async function GET(
@@ -10,17 +10,36 @@ export async function GET(
     const session = await auth();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const { id } = await params;
-    const db = getDb();
-    const team = db
-      .prepare(
-        `SELECT t.*, e.name as event_name, r.registration_status, r.checked_in, r.checked_in_at
-         FROM teams t JOIN events e ON t.event_id = e.id
-         JOIN registrations r ON r.team_id = t.id WHERE t.id = ?`
-      )
-      .get(id);
-    if (!team) return NextResponse.json({ error: "Team not found" }, { status: 404 });
-    const participants = db.prepare("SELECT * FROM participants WHERE team_id = ?").all(id);
-    return NextResponse.json({ team, participants });
+
+    const teamData = await prisma.team.findUnique({
+      where: { id: Number(id) },
+      include: {
+        event: true,
+        registration: true,
+        participants: {
+          orderBy: { is_team_lead: "desc" },
+        },
+      },
+    });
+
+    if (!teamData) return NextResponse.json({ error: "Team not found" }, { status: 404 });
+
+    const team = {
+      id: teamData.id,
+      registration_id: teamData.registration_id,
+      event_id: teamData.event_id,
+      team_name: teamData.team_name,
+      college_name: teamData.college_name,
+      department: teamData.department,
+      created_at: teamData.created_at,
+      updated_at: teamData.updated_at,
+      event_name: teamData.event.name,
+      registration_status: teamData.registration?.registration_status,
+      checked_in: teamData.registration?.checked_in,
+      checked_in_at: teamData.registration?.checked_in_at,
+    };
+
+    return NextResponse.json({ team, participants: teamData.participants });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Failed" }, { status: 500 });
@@ -37,10 +56,16 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
     const { team_name, college_name, department } = body;
-    const db = getDb();
-    db.prepare(
-      "UPDATE teams SET team_name=?, college_name=?, department=?, updated_at=CURRENT_TIMESTAMP WHERE id=?"
-    ).run(team_name, college_name, department, id);
+
+    await prisma.team.update({
+      where: { id: Number(id) },
+      data: {
+        team_name,
+        college_name,
+        department,
+      },
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error(error);
@@ -56,8 +81,11 @@ export async function DELETE(
     const session = await auth();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const { id } = await params;
-    const db = getDb();
-    db.prepare("DELETE FROM teams WHERE id = ?").run(id);
+
+    await prisma.team.delete({
+      where: { id: Number(id) },
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error(error);

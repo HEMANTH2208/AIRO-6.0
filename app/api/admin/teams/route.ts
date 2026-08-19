@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
@@ -15,40 +15,59 @@ export async function GET(req: NextRequest) {
     const regId = searchParams.get("registration_id");
     const checkedIn = searchParams.get("checked_in");
 
-    let query = `
-      SELECT t.*, e.name as event_name, r.registration_status, r.checked_in, r.checked_in_at, r.created_at as registered_at
-      FROM teams t
-      JOIN events e ON t.event_id = e.id
-      JOIN registrations r ON r.team_id = t.id
-      WHERE 1=1
-    `;
-    const params: (string | number)[] = [];
+    const where: any = {};
 
-    if (event) { query += " AND e.name LIKE ?"; params.push(`%${event}%`); }
-    if (college) { query += " AND t.college_name LIKE ?"; params.push(`%${college}%`); }
-    if (department) { query += " AND t.department LIKE ?"; params.push(`%${department}%`); }
-    if (teamName) { query += " AND t.team_name LIKE ?"; params.push(`%${teamName}%`); }
-    if (regId) { query += " AND t.registration_id LIKE ?"; params.push(`%${regId}%`); }
+    if (event) {
+      where.event = { name: { contains: event, mode: "insensitive" } };
+    }
+    if (college) {
+      where.college_name = { contains: college, mode: "insensitive" };
+    }
+    if (department) {
+      where.department = { contains: department, mode: "insensitive" };
+    }
+    if (teamName) {
+      where.team_name = { contains: teamName, mode: "insensitive" };
+    }
+    if (regId) {
+      where.registration_id = { contains: regId, mode: "insensitive" };
+    }
     if (checkedIn !== null && checkedIn !== "") {
-      query += " AND r.checked_in = ?";
-      params.push(checkedIn === "true" ? 1 : 0);
+      where.registration = { checked_in: checkedIn === "true" ? 1 : 0 };
     }
 
-    query += " ORDER BY r.created_at DESC";
-
-    const db = getDb();
-    const teams = db.prepare(query).all(...params);
-
-    // Attach participants to each team
-    const result = teams.map((team) => {
-      const t = team as { id: number };
-      const participants = db
-        .prepare("SELECT * FROM participants WHERE team_id = ? ORDER BY is_team_lead DESC")
-        .all(t.id);
-      return { ...(team as Record<string, unknown>), participants };
+    const teamsData = await prisma.team.findMany({
+      where,
+      include: {
+        event: true,
+        registration: true,
+        participants: {
+          orderBy: { is_team_lead: "desc" },
+        },
+      },
+      orderBy: {
+        created_at: "desc",
+      },
     });
 
-    return NextResponse.json({ teams: result });
+    const teams = teamsData.map((t) => ({
+      id: t.id,
+      registration_id: t.registration_id,
+      event_id: t.event_id,
+      team_name: t.team_name,
+      college_name: t.college_name,
+      department: t.department,
+      created_at: t.created_at,
+      updated_at: t.updated_at,
+      event_name: t.event.name,
+      registration_status: t.registration?.registration_status,
+      checked_in: t.registration?.checked_in,
+      checked_in_at: t.registration?.checked_in_at,
+      registered_at: t.registration?.created_at,
+      participants: t.participants,
+    }));
+
+    return NextResponse.json({ teams });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Failed to fetch teams" }, { status: 500 });

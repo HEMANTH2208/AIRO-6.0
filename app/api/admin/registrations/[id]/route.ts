@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
 export async function PUT(
@@ -12,24 +12,21 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
     const { registration_status, checked_in } = body;
-    const db = getDb();
+
+    const data: any = {};
     if (registration_status !== undefined) {
-      db.prepare("UPDATE registrations SET registration_status=? WHERE id=?").run(
-        registration_status,
-        id
-      );
+      data.registration_status = registration_status;
     }
     if (checked_in !== undefined) {
-      if (checked_in) {
-        db.prepare(
-          "UPDATE registrations SET checked_in=1, checked_in_at=CURRENT_TIMESTAMP WHERE id=?"
-        ).run(id);
-      } else {
-        db.prepare(
-          "UPDATE registrations SET checked_in=0, checked_in_at=NULL WHERE id=?"
-        ).run(id);
-      }
+      data.checked_in = checked_in ? 1 : 0;
+      data.checked_in_at = checked_in ? new Date() : null;
     }
+
+    await prisma.registration.update({
+      where: { id: Number(id) },
+      data,
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error(error);
@@ -45,14 +42,17 @@ export async function DELETE(
     const session = await auth();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const { id } = await params;
-    const db = getDb();
-    // Get team_id first, delete team (cascade deletes registration + participants)
-    const reg = db.prepare("SELECT team_id FROM registrations WHERE id=?").get(id) as
-      | { team_id: number }
-      | undefined;
+
+    const reg = await prisma.registration.findUnique({
+      where: { id: Number(id) },
+    });
+    
     if (reg) {
-      db.prepare("DELETE FROM teams WHERE id=?").run(reg.team_id);
+      await prisma.team.delete({
+        where: { id: reg.team_id },
+      });
     }
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error(error);

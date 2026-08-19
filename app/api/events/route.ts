@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
 export async function GET() {
   try {
-    const db = getDb();
-    const events = db.prepare("SELECT * FROM events ORDER BY id").all();
+    const events = await prisma.event.findMany({
+      orderBy: { id: "asc" },
+    });
     return NextResponse.json({ events });
   } catch (error) {
     console.error("GET /api/events error:", error);
@@ -25,15 +26,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const db = getDb();
-    const result = db
-      .prepare(
-        `INSERT INTO events (name, slug, description, duration, min_team_size, max_team_size, status)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`
-      )
-      .run(name, slug, description, duration, min_team_size, max_team_size, status || "active");
+    const event = await prisma.event.create({
+      data: {
+        name,
+        slug,
+        description,
+        duration,
+        min_team_size: Number(min_team_size),
+        max_team_size: Number(max_team_size),
+        status: status || "active",
+      },
+    });
 
-    const event = db.prepare("SELECT * FROM events WHERE id = ?").get(result.lastInsertRowid);
     return NextResponse.json({ event }, { status: 201 });
   } catch (error) {
     console.error("POST /api/events error:", error);

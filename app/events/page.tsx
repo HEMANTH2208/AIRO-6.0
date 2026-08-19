@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 
 interface Event {
   id: number;
@@ -32,8 +32,19 @@ const EVENT_COLORS: Record<string, string> = {
 
 async function getEvents(): Promise<Event[]> {
   try {
-    const db = getDb();
-    return db.prepare("SELECT * FROM events ORDER BY id").all() as Event[];
+    const events = await prisma.event.findMany({
+      orderBy: { id: "asc" },
+    });
+    return events.map((e) => ({
+      id: e.id,
+      name: e.name,
+      slug: e.slug,
+      description: e.description || "",
+      duration: e.duration || "",
+      min_team_size: e.min_team_size,
+      max_team_size: e.max_team_size,
+      status: e.status,
+    }));
   } catch {
     return [];
   }

@@ -1,57 +1,23 @@
 import ExcelJS from "exceljs";
-import { getDb } from "./db";
-
-interface ExportRow {
-  registration_id: string;
-  event: string;
-  team_name: string;
-  college_name: string;
-  department: string;
-  member_name: string;
-  member_student_id: string;
-  member_email: string;
-  member_phone: string;
-  is_team_lead: number;
-  registration_date: string;
-  registration_status: string;
-  checked_in: number;
-  checked_in_at: string | null;
-}
+import { prisma } from "./prisma";
 
 export async function exportToExcel(eventId?: number): Promise<Buffer> {
-  const db = getDb();
-
-  let query = `
-    SELECT
-      t.registration_id,
-      e.name AS event,
-      t.team_name,
-      t.college_name,
-      t.department,
-      p.name AS member_name,
-      p.student_id AS member_student_id,
-      p.email AS member_email,
-      p.phone AS member_phone,
-      p.is_team_lead,
-      r.created_at AS registration_date,
-      r.registration_status,
-      r.checked_in,
-      r.checked_in_at
-    FROM teams t
-    JOIN events e ON t.event_id = e.id
-    JOIN participants p ON p.team_id = t.id
-    JOIN registrations r ON r.team_id = t.id
-  `;
-
-  const params: number[] = [];
-  if (eventId) {
-    query += " WHERE t.event_id = ?";
-    params.push(eventId);
-  }
-
-  query += " ORDER BY t.registration_id, p.is_team_lead DESC, p.id";
-
-  const rows = db.prepare(query).all(...params) as ExportRow[];
+  const participants = await prisma.participant.findMany({
+    where: eventId ? { team: { event_id: eventId } } : {},
+    include: {
+      team: {
+        include: {
+          event: true,
+          registration: true,
+        },
+      },
+    },
+    orderBy: [
+      { team: { registration_id: "asc" } },
+      { is_team_lead: "desc" },
+      { id: "asc" },
+    ],
+  });
 
   const workbook = new ExcelJS.Workbook();
   workbook.creator = "AIRO 6.0 - Sairam Engineering College";
@@ -99,22 +65,23 @@ export async function exportToExcel(eventId?: number): Promise<Buffer> {
   headerRow.height = 22;
 
   // Add data rows
-  rows.forEach((row, idx) => {
+  participants.forEach((p, idx) => {
+    const reg = p.team.registration;
     const dataRow = sheet.addRow({
-      registration_details: `${row.registration_id} - ${row.event} - ${row.team_name} - ${row.college_name}`,
-      department: row.department,
-      role: row.is_team_lead ? "Team Lead" : "Member",
-      member_name: row.member_name,
-      member_student_id: row.member_student_id,
-      member_email: row.member_email,
-      member_phone: row.member_phone,
-      registration_date: row.registration_date
-        ? new Date(row.registration_date).toLocaleString("en-IN")
+      registration_details: `${p.team.registration_id} - ${p.team.event.name} - ${p.team.team_name} - ${p.team.college_name}`,
+      department: p.team.department,
+      role: p.is_team_lead === 1 ? "Team Lead" : "Member",
+      member_name: p.name,
+      member_student_id: p.student_id,
+      member_email: p.email,
+      member_phone: p.phone,
+      registration_date: reg?.created_at
+        ? new Date(reg.created_at).toLocaleString("en-IN")
         : "",
-      registration_status: row.registration_status,
-      checked_in: row.checked_in ? "Yes" : "No",
-      checked_in_at: row.checked_in_at
-        ? new Date(row.checked_in_at).toLocaleString("en-IN")
+      registration_status: reg?.registration_status || "confirmed",
+      checked_in: reg?.checked_in ? "Yes" : "No",
+      checked_in_at: reg?.checked_in_at
+        ? new Date(reg.checked_in_at).toLocaleString("en-IN")
         : "",
     });
 

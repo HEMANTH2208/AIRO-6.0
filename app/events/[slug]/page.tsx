@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 
 interface Event {
   id: number;
@@ -111,8 +111,20 @@ const EVENT_DETAILS: Record<string, { rounds: string[]; rules: string[] }> = {
 
 async function getEvent(slug: string): Promise<Event | null> {
   try {
-    const db = getDb();
-    return db.prepare("SELECT * FROM events WHERE slug = ?").get(slug) as Event | null;
+    const e = await prisma.event.findUnique({
+      where: { slug },
+    });
+    if (!e) return null;
+    return {
+      id: e.id,
+      name: e.name,
+      slug: e.slug,
+      description: e.description || "",
+      duration: e.duration || "",
+      min_team_size: e.min_team_size,
+      max_team_size: e.max_team_size,
+      status: e.status,
+    };
   } catch {
     return null;
   }

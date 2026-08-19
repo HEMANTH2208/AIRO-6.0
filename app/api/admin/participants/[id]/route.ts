@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
 export async function PUT(
@@ -12,14 +12,17 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
     const { name, student_id, email, phone } = body;
-    const db = getDb();
-    db.prepare("UPDATE participants SET name=?, student_id=?, email=?, phone=? WHERE id=?").run(
-      name,
-      student_id,
-      email,
-      phone,
-      id
-    );
+
+    await prisma.participant.update({
+      where: { id: Number(id) },
+      data: {
+        name,
+        student_id,
+        email,
+        phone,
+      },
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error(error);
@@ -35,8 +38,11 @@ export async function DELETE(
     const session = await auth();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const { id } = await params;
-    const db = getDb();
-    db.prepare("DELETE FROM participants WHERE id = ?").run(id);
+
+    await prisma.participant.delete({
+      where: { id: Number(id) },
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error(error);

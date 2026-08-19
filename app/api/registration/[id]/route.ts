@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(
   _req: NextRequest,
@@ -7,26 +7,41 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const db = getDb();
 
-    const team = db
-      .prepare(
-        `SELECT t.*, e.name as event_name, e.slug as event_slug, e.duration as event_duration,
-                r.qr_code, r.registration_status, r.checked_in, r.checked_in_at, r.created_at as registered_at
-         FROM teams t
-         JOIN events e ON t.event_id = e.id
-         JOIN registrations r ON r.team_id = t.id
-         WHERE t.registration_id = ?`
-      )
-      .get(id);
+    const teamData = await prisma.team.findUnique({
+      where: { registration_id: id },
+      include: {
+        event: true,
+        registration: true,
+        participants: {
+          orderBy: { is_team_lead: "desc" },
+        },
+      },
+    });
 
-    if (!team) return NextResponse.json({ error: "Registration not found" }, { status: 404 });
+    if (!teamData) return NextResponse.json({ error: "Registration not found" }, { status: 404 });
 
-    const participants = db
-      .prepare("SELECT * FROM participants WHERE team_id = ? ORDER BY is_team_lead DESC")
-      .all((team as { id: number }).id);
+    // Format to match old SQLite flat fields
+    const team = {
+      id: teamData.id,
+      registration_id: teamData.registration_id,
+      event_id: teamData.event_id,
+      team_name: teamData.team_name,
+      college_name: teamData.college_name,
+      department: teamData.department,
+      created_at: teamData.created_at,
+      updated_at: teamData.updated_at,
+      event_name: teamData.event.name,
+      event_slug: teamData.event.slug,
+      event_duration: teamData.event.duration,
+      qr_code: teamData.registration?.qr_code,
+      registration_status: teamData.registration?.registration_status,
+      checked_in: teamData.registration?.checked_in,
+      checked_in_at: teamData.registration?.checked_in_at,
+      registered_at: teamData.registration?.created_at,
+    };
 
-    return NextResponse.json({ team, participants });
+    return NextResponse.json({ team, participants: teamData.participants });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Failed to fetch registration" }, { status: 500 });

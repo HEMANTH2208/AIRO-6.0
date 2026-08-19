@@ -1,15 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { generateQRCode, generateRegistrationId } from "@/lib/qr";
-
-interface Event {
-  id: number;
-  name: string;
-  slug: string;
-  min_team_size: number;
-  max_team_size: number;
-  status: string;
-}
 
 interface ParticipantInput {
   name: string;
@@ -29,10 +20,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const db = getDb();
-
     // Validate event exists and is active
-    const event = db.prepare("SELECT * FROM events WHERE id = ?").get(event_id) as Event | undefined;
+    const event = await prisma.event.findUnique({
+      where: { id: Number(event_id) },
+    });
     if (!event) return NextResponse.json({ error: "Event not found" }, { status: 404 });
     if (event.status !== "active") {
       return NextResponse.json({ error: "Registration for this event is closed" }, { status: 400 });
@@ -72,9 +63,12 @@ export async function POST(req: NextRequest) {
 
     // Check for duplicate student IDs already in DB
     for (const sid of studentIds) {
-      const existing = db
-        .prepare("SELECT p.id FROM participants p JOIN teams t ON p.team_id = t.id WHERE p.student_id = ? AND t.event_id = ?")
-        .get(sid, event_id);
+      const existing = await prisma.participant.findFirst({
+        where: {
+          student_id: sid,
+          team: { event_id: Number(event_id) },
+        },
+      });
       if (existing) {
         return NextResponse.json(
           { error: `Student ID ${sid} is already registered for this event` },
@@ -85,9 +79,12 @@ export async function POST(req: NextRequest) {
 
     // Check for duplicate emails in DB
     for (const email of emails) {
-      const existing = db
-        .prepare("SELECT p.id FROM participants p JOIN teams t ON p.team_id = t.id WHERE p.email = ? AND t.event_id = ?")
-        .get(email, event_id);
+      const existing = await prisma.participant.findFirst({
+        where: {
+          email,
+          team: { event_id: Number(event_id) },
+        },
+      });
       if (existing) {
         return NextResponse.json(
           { error: `Email ${email} is already registered for this event` },
@@ -99,59 +96,64 @@ export async function POST(req: NextRequest) {
     // Generate registration ID
     const registrationId = generateRegistrationId(event.slug);
 
-    // Run everything in a transaction
-    const registerTeam = db.transaction(() => {
-      // Insert team
-      const teamResult = db
-        .prepare(
-          `INSERT INTO teams (registration_id, event_id, team_name, college_name, department)
-           VALUES (?, ?, ?, ?, ?)`
-        )
-        .run(registrationId, event_id, team_name, college_name, department);
+    // Run transaction
+    const result = await prisma.$transaction(async (tx) => {
+      // 1. Insert team
+      const team = await tx.team.create({
+        data: {
+          registration_id: registrationId,
+          event_id: event.id,
+          team_name,
+          college_name,
+          department,
+        },
+      });
 
-      const teamId = teamResult.lastInsertRowid;
+      // 2. Insert participants
+      await tx.participant.createMany({
+        data: members.map((member: ParticipantInput) => ({
+          team_id: team.id,
+          name: member.name,
+          student_id: member.student_id,
+          email: member.email,
+          phone: member.phone,
+          is_team_lead: member.is_team_lead ? 1 : 0,
+        })),
+      });
 
-      // Insert participants
-      const insertParticipant = db.prepare(
-        `INSERT INTO participants (team_id, name, student_id, email, phone, is_team_lead)
-         VALUES (?, ?, ?, ?, ?, ?)`
-      );
+      // 3. Create registration record
+      const registration = await tx.registration.create({
+        data: {
+          team_id: team.id,
+          registration_status: "confirmed",
+        },
+      });
 
-      for (const member of members as ParticipantInput[]) {
-        insertParticipant.run(
-          teamId,
-          member.name,
-          member.student_id,
-          member.email,
-          member.phone,
-          member.is_team_lead ? 1 : 0
-        );
-      }
-
-      // Create registration record (QR generated after transaction)
-      db.prepare(
-        `INSERT INTO registrations (team_id, registration_status)
-         VALUES (?, 'confirmed')`
-      ).run(teamId);
-
-      return { teamId };
+      return { team, registration };
     });
-
-    const { teamId } = registerTeam();
 
     // Generate QR code
     const qrCode = await generateQRCode(registrationId);
 
     // Update QR in DB
-    db.prepare("UPDATE registrations SET qr_code = ? WHERE team_id = ?").run(qrCode, teamId);
+    const updatedRegistration = await prisma.registration.update({
+      where: { team_id: result.team.id },
+      data: { qr_code: qrCode },
+    });
 
-    // Return full registration data
-    const team = db.prepare("SELECT * FROM teams WHERE id = ?").get(teamId);
-    const participants = db.prepare("SELECT * FROM participants WHERE team_id = ?").all(teamId);
-    const registration = db.prepare("SELECT * FROM registrations WHERE team_id = ?").get(teamId);
+    const participants = await prisma.participant.findMany({
+      where: { team_id: result.team.id },
+    });
 
     return NextResponse.json(
-      { success: true, registration_id: registrationId, team, participants, registration, qr_code: qrCode },
+      {
+        success: true,
+        registration_id: registrationId,
+        team: result.team,
+        participants,
+        registration: updatedRegistration,
+        qr_code: qrCode,
+      },
       { status: 201 }
     );
   } catch (error) {

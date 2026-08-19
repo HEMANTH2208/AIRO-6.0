@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Event {
+  id            Int      @id @default(autoincrement())
+  name          String
+  slug          String   @unique
+  description   String?
+  duration      String?
+  min_team_size Int      @default(2)
+  max_team_size Int      @default(4)
+  status        String   @default("active")
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  teams         Team[]
+
+  @@map("events")
+}
+
+model Team {
+  id              Int           @id @default(autoincrement())
+  registration_id String        @unique
+  event_id        Int
+  team_name       String
+  college_name    String
+  department      String
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+  event           Event         @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  participants    Participant[]
+  registration    Registration?
+
+  @@map("teams")
+}
+
+model Participant {
+  id           Int     @id @default(autoincrement())
+  team_id      Int
+  name         String
+  student_id   String
+  email        String
+  phone        String
+  is_team_lead Int     @default(0)
+  team         Team    @relation(fields: [team_id], references: [id], onDelete: Cascade)
+
+  @@map("participants")
+}
+
+model Registration {
+  id                  Int       @id @default(autoincrement())
+  team_id             Int       @unique
+  qr_code             String?
+  registration_status String    @default("confirmed")
+  checked_in          Int       @default(0)
+  checked_in_at       DateTime?
+  created_at          DateTime  @default(now())
+  team                Team      @relation(fields: [team_id], references: [id], onDelete: Cascade)
+
+  @@map("registrations")
+}
+
+model AdminUser {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  password_hash String
+  role          String   @default("admin")
+  created_at    DateTime @default(now())
+
+  @@map("admin_users")
+}

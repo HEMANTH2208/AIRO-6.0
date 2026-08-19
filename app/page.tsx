@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 
 interface Event {
   id: number;
@@ -23,9 +23,10 @@ const EVENT_ICONS: Record<string, string> = {
 
 async function getStats() {
   try {
-    const db = getDb();
-    const totalTeams = (db.prepare("SELECT COUNT(*) as cnt FROM teams").get() as { cnt: number }).cnt;
-    const totalEvents = (db.prepare("SELECT COUNT(*) as cnt FROM events WHERE status='active'").get() as { cnt: number }).cnt;
+    const totalTeams = await prisma.team.count();
+    const totalEvents = await prisma.event.count({
+      where: { status: "active" },
+    });
     return { totalTeams, totalEvents };
   } catch {
     return { totalTeams: 0, totalEvents: 6 };
@@ -34,8 +35,20 @@ async function getStats() {
 
 async function getEvents(): Promise<Event[]> {
   try {
-    const db = getDb();
-    return db.prepare("SELECT * FROM events WHERE status='active' ORDER BY id").all() as Event[];
+    const events = await prisma.event.findMany({
+      where: { status: "active" },
+      orderBy: { id: "asc" },
+    });
+    return events.map((e) => ({
+      id: e.id,
+      name: e.name,
+      slug: e.slug,
+      description: e.description || "",
+      duration: e.duration || "",
+      min_team_size: e.min_team_size,
+      max_team_size: e.max_team_size,
+      status: e.status,
+    }));
   } catch {
     return [];
   }

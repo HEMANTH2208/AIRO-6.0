@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
 export async function GET() {
@@ -7,47 +7,66 @@ export async function GET() {
     const session = await auth();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const db = getDb();
+    const totalRegistrations = await prisma.registration.count();
+    const totalTeams = await prisma.team.count();
+    const checkedIn = await prisma.registration.count({
+      where: { checked_in: 1 },
+    });
 
-    const totalRegistrations = (
-      db.prepare("SELECT COUNT(*) as cnt FROM registrations").get() as { cnt: number }
-    ).cnt;
+    // Registrations by event
+    const eventsWithTeams = await prisma.event.findMany({
+      include: {
+        _count: {
+          select: { teams: true },
+        },
+      },
+      orderBy: { id: "asc" },
+    });
+    const byEvent = eventsWithTeams.map((e) => ({
+      event: e.name,
+      count: e._count.teams,
+    }));
 
-    const totalTeams = (
-      db.prepare("SELECT COUNT(*) as cnt FROM teams").get() as { cnt: number }
-    ).cnt;
+    // Top colleges by registration count
+    const colGroup = await prisma.team.groupBy({
+      by: ["college_name"],
+      _count: {
+        id: true,
+      },
+      orderBy: {
+        _count: {
+          id: "desc",
+        },
+      },
+      take: 10,
+    });
+    const byCollege = colGroup.map((c) => ({
+      college_name: c.college_name,
+      count: c._count.id,
+    }));
 
-    const checkedIn = (
-      db.prepare("SELECT COUNT(*) as cnt FROM registrations WHERE checked_in = 1").get() as {
-        cnt: number;
-      }
-    ).cnt;
+    // Recent registrations
+    const recent = await prisma.registration.findMany({
+      orderBy: { created_at: "desc" },
+      take: 10,
+      include: {
+        team: {
+          include: {
+            event: true,
+          },
+        },
+      },
+    });
 
-    const byEvent = db
-      .prepare(
-        `SELECT e.name as event, COUNT(t.id) as count
-         FROM events e
-         LEFT JOIN teams t ON t.event_id = e.id
-         GROUP BY e.id ORDER BY e.id`
-      )
-      .all();
-
-    const byCollege = db
-      .prepare(
-        `SELECT college_name, COUNT(*) as count FROM teams GROUP BY college_name ORDER BY count DESC LIMIT 10`
-      )
-      .all();
-
-    const recentRegistrations = db
-      .prepare(
-        `SELECT t.registration_id, t.team_name, e.name as event_name, t.college_name,
-                r.registration_status, r.checked_in, r.created_at
-         FROM teams t
-         JOIN events e ON t.event_id = e.id
-         JOIN registrations r ON r.team_id = t.id
-         ORDER BY r.created_at DESC LIMIT 10`
-      )
-      .all();
+    const recentRegistrations = recent.map((r) => ({
+      registration_id: r.team.registration_id,
+      team_name: r.team.team_name,
+      event_name: r.team.event.name,
+      college_name: r.team.college_name,
+      registration_status: r.registration_status,
+      checked_in: r.checked_in,
+      created_at: r.created_at,
+    }));
 
     return NextResponse.json({
       totalRegistrations,
