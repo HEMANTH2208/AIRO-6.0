@@ -89,6 +89,7 @@ export default function AdminDashboard() {
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.78rem", color: "var(--text-secondary)", marginBottom: "0.25rem" }}>
                           <span>Other Colleges: <strong>{e.otherCollegeCount} / {e.maxOtherCollege}</strong></span>
+                          <span>Remaining Slots: <strong style={{ color: e.otherCollegeCount >= e.maxOtherCollege ? "var(--error)" : "var(--success)" }}>{Math.max(0, e.maxOtherCollege - e.otherCollegeCount)}</strong></span>
                           {e.otherCollegeCount >= e.maxOtherCollege && (
                             <span style={{ color: "var(--error)", fontWeight: 700 }}>⚠️ FULL</span>
                           )}

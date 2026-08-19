@@ -1,20 +1,14 @@
 import QRCode from "qrcode";
 
 export async function generateQRCode(registrationId: string): Promise<string> {
-  const qrData = JSON.stringify({
-    id: registrationId,
-    event: "AIRO 6.0",
-    org: "Sairam Engineering College",
-  });
-
-  const dataUrl = await QRCode.toDataURL(qrData, {
+  const dataUrl = await QRCode.toDataURL(registrationId, {
     width: 300,
     margin: 2,
     color: {
       dark: "#1a1a2e",
       light: "#ffffff",
     },
-    errorCorrectionLevel: "H",
+    errorCorrectionLevel: "M",
   });
 
   return dataUrl;

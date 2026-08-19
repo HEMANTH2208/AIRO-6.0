@@ -1161,7 +1161,7 @@ tbody tr:last-child td { border-bottom: none; }
   }
 
   /* Hide print/download buttons inside the pass card on print */
-  .qr-pass button, .qr-pass .btn, .qr-pass div[style*="display: flex"] {
+  .qr-pass button, .qr-pass .btn, .qr-pass .pass-actions {
     display: none !important;
   }
 }

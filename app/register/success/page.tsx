@@ -193,7 +193,7 @@ function SuccessContent() {
                   </div>
                 </div>
 
-                <div style={{ display: "flex", gap: "0.5rem", marginTop: "1.25rem" }}>
+                <div className="pass-actions" style={{ display: "flex", gap: "0.5rem", marginTop: "1.25rem" }}>
                   <button className="btn btn-primary btn-sm" style={{ flex: 1 }} onClick={handleDownload}>
                     ↓ Download QR
                   </button>

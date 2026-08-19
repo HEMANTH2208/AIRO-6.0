@@ -218,7 +218,7 @@ function DashboardContent() {
                     <div className="qr-pass-row"><span className="qr-pass-label">Team</span><span className="qr-pass-value">{team.team_name}</span></div>
                     <div className="qr-pass-row"><span className="qr-pass-label">Members</span><span className="qr-pass-value">{participants.length}</span></div>
                   </div>
-                  <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
+                  <div className="pass-actions" style={{ display: "flex", gap: "0.5rem", marginTop: "1rem" }}>
                     <button className="btn btn-primary btn-sm" style={{ flex: 1 }} onClick={handleDownload}>↓ Download</button>
                     <button className="btn btn-secondary btn-sm" style={{ flex: 1 }} onClick={() => window.print()}>🖨 Print</button>
                   </div>
