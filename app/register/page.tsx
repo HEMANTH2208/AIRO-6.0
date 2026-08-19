@@ -11,6 +11,8 @@ interface Event {
   min_team_size: number;
   max_team_size: number;
   status: string;
+  max_other_college_participants: number;
+  other_college_count: number;
 }
 
 interface Member {
@@ -101,6 +103,14 @@ function RegisterForm() {
     if (!teamInfo.team_name.trim()) errs.team_name = "Team name is required";
     if (!teamInfo.college_name.trim()) errs.college_name = "College name is required";
     if (!teamInfo.department.trim()) errs.department = "Department is required";
+
+    if (teamInfo.college_name.trim() && selectedEvent) {
+      const isSairam = teamInfo.college_name.toLowerCase().includes("sairam");
+      if (!isSairam && selectedEvent.other_college_count >= selectedEvent.max_other_college_participants) {
+        errs.college_name = `Registration for this event is closed for other colleges (limit of ${selectedEvent.max_other_college_participants} reached).`;
+      }
+    }
+
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };

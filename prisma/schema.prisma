@@ -17,10 +17,14 @@ model Event {
   duration      String?
   min_team_size Int      @default(2)
   max_team_size Int      @default(4)
-  status        String   @default("active")
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
-  teams         Team[]
+  status                         String   @default("active")
+  max_other_college_participants Int      @default(60)
+  coordinator_name               String?
+  coordinator_photo              String?
+  coordinator_contact            String?
+  created_at                     DateTime @default(now())
+  updated_at                     DateTime @updatedAt
+  teams                          Team[]
 
   @@map("events")
 }

@@ -34,7 +34,18 @@ export async function PUT(
 
     const { id } = await params;
     const body = await req.json();
-    const { name, description, duration, min_team_size, max_team_size, status } = body;
+    const {
+      name,
+      description,
+      duration,
+      min_team_size,
+      max_team_size,
+      status,
+      max_other_college_participants,
+      coordinator_name,
+      coordinator_photo,
+      coordinator_contact,
+    } = body;
 
     const event = await prisma.event.update({
       where: { id: Number(id) },
@@ -45,6 +56,10 @@ export async function PUT(
         min_team_size: Number(min_team_size),
         max_team_size: Number(max_team_size),
         status,
+        max_other_college_participants: Number(max_other_college_participants || 60),
+        coordinator_name,
+        coordinator_photo,
+        coordinator_contact,
       },
     });
 

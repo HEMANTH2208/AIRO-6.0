@@ -11,6 +11,9 @@ interface Event {
   min_team_size: number;
   max_team_size: number;
   status: string;
+  coordinator_name: string | null;
+  coordinator_photo: string | null;
+  coordinator_contact: string | null;
 }
 
 const EVENT_ICONS: Record<string, string> = {
@@ -124,6 +127,9 @@ async function getEvent(slug: string): Promise<Event | null> {
       min_team_size: e.min_team_size,
       max_team_size: e.max_team_size,
       status: e.status,
+      coordinator_name: e.coordinator_name,
+      coordinator_photo: e.coordinator_photo,
+      coordinator_contact: e.coordinator_contact,
     };
   } catch {
     return null;
@@ -286,6 +292,16 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                         {event.status === "active" ? "Open" : "Closed"}
                       </span>
                     </div>
+
+                    {event.coordinator_name && (
+                      <div className="review-row" style={{ flexDirection: "column", alignItems: "flex-start", gap: "0.25rem", borderTop: "1px dashed var(--border)", paddingTop: "0.75rem", marginTop: "0.75rem" }}>
+                        <span className="review-label" style={{ fontSize: "0.75rem", color: "var(--primary-light)" }}>Event Coordinator</span>
+                        <span className="review-value" style={{ fontWeight: 600 }}>{event.coordinator_name}</span>
+                        {event.coordinator_contact && (
+                          <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>📞 {event.coordinator_contact}</span>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   {event.status === "active" ? (

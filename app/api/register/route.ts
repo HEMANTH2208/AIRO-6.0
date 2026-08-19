@@ -93,6 +93,31 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Check other college participant limit
+    const isSairam = college_name.toLowerCase().includes("sairam");
+    const otherColCount = await prisma.participant.count({
+      where: {
+        team: {
+          event_id: Number(event_id),
+          NOT: {
+            college_name: {
+              contains: "Sairam",
+              mode: "insensitive",
+            },
+          },
+        },
+      },
+    });
+
+    if (!isSairam && (otherColCount + memberCount) > event.max_other_college_participants) {
+      return NextResponse.json(
+        {
+          error: `Registration closed. The limit of ${event.max_other_college_participants} participants from other colleges for this event has been reached.`,
+        },
+        { status: 400 }
+      );
+    }
+
     // Generate registration ID
     const registrationId = generateRegistrationId(event.slug);
 

@@ -77,16 +77,32 @@ export default function AdminDashboard() {
               <div className="card">
                 <div className="card-header"><div className="card-title">Registrations by Event</div></div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                  {stats.byEvent.map((e) => {
-                    const pct = stats.totalTeams > 0 ? (e.count / stats.totalTeams) * 100 : 0;
+                  {stats.byEvent.map((e: any) => {
+                    const otherPct = e.maxOtherCollege > 0 ? (e.otherCollegeCount / e.maxOtherCollege) * 100 : 0;
                     return (
-                      <div key={e.event}>
+                      <div key={e.event} style={{ marginBottom: "1.25rem" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.35rem" }}>
-                          <span style={{ fontSize: "0.85rem", color: "var(--text-primary)" }}>{e.event}</span>
-                          <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--primary-light)" }}>{e.count}</span>
+                          <span style={{ fontSize: "0.85rem", color: "var(--text-primary)", fontWeight: 600 }}>{e.event}</span>
+                          <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
+                            {e.count} {e.count === 1 ? "team" : "teams"}
+                          </span>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.78rem", color: "var(--text-secondary)", marginBottom: "0.25rem" }}>
+                          <span>Other Colleges: <strong>{e.otherCollegeCount} / {e.maxOtherCollege}</strong></span>
+                          {e.otherCollegeCount >= e.maxOtherCollege && (
+                            <span style={{ color: "var(--error)", fontWeight: 700 }}>⚠️ FULL</span>
+                          )}
                         </div>
                         <div style={{ height: "6px", background: "var(--border)", borderRadius: "3px", overflow: "hidden" }}>
-                          <div style={{ width: `${pct}%`, height: "100%", background: "var(--gradient-primary)", borderRadius: "3px", transition: "width 0.5s ease" }} />
+                          <div 
+                            style={{ 
+                              width: `${Math.min(otherPct, 100)}%`, 
+                              height: "100%", 
+                              background: e.otherCollegeCount >= e.maxOtherCollege ? "var(--error)" : "var(--gradient-primary)", 
+                              borderRadius: "3px", 
+                              transition: "width 0.5s ease" 
+                            }} 
+                          />
                         </div>
                       </div>
                     );

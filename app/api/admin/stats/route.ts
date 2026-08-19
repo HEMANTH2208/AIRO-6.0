@@ -13,19 +13,34 @@ export async function GET() {
       where: { checked_in: 1 },
     });
 
-    // Registrations by event
-    const eventsWithTeams = await prisma.event.findMany({
+    // Registrations by event with other college participant counts
+    const eventsWithDetails = await prisma.event.findMany({
       include: {
-        _count: {
-          select: { teams: true },
+        teams: {
+          include: {
+            participants: true,
+          },
         },
       },
       orderBy: { id: "asc" },
     });
-    const byEvent = eventsWithTeams.map((e) => ({
-      event: e.name,
-      count: e._count.teams,
-    }));
+
+    const byEvent = eventsWithDetails.map((e) => {
+      let otherCollegeCount = 0;
+      e.teams.forEach((t) => {
+        const isSairam = t.college_name.toLowerCase().includes("sairam");
+        if (!isSairam) {
+          otherCollegeCount += t.participants.length;
+        }
+      });
+      return {
+        id: e.id,
+        event: e.name,
+        count: e.teams.length,
+        otherCollegeCount,
+        maxOtherCollege: e.max_other_college_participants,
+      };
+    });
 
     // Top colleges by registration count
     const colGroup = await prisma.team.groupBy({
