@@ -193,20 +193,19 @@ function SuccessContent() {
                   </div>
                 </div>
 
-                <div className="pass-actions" style={{ display: "flex", gap: "0.5rem", marginTop: "1.25rem" }}>
-                  <button className="btn btn-primary btn-sm" style={{ flex: 1 }} onClick={handleDownload}>
-                    ↓ Download QR
-                  </button>
-                  <button className="btn btn-secondary btn-sm" style={{ flex: 1 }} onClick={handlePrint}>
-                    🖨 Print
-                  </button>
+                <div className="pass-actions" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "1.25rem" }}>
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <button className="btn btn-primary btn-sm" style={{ flex: 1 }} onClick={handleDownload}>
+                      ↓ Download QR
+                    </button>
+                    <button className="btn btn-secondary btn-sm" style={{ flex: 1 }} onClick={handlePrint}>
+                      🖨 Print
+                    </button>
+                  </div>
+                  <Link href={`/dashboard?id=${team.registration_id}`} className="btn btn-outline btn-sm" style={{ textAlign: "center", justifyContent: "center" }}>
+                    View My Dashboard
+                  </Link>
                 </div>
-              </div>
-
-              <div style={{ textAlign: "center", marginTop: "1rem" }}>
-                <Link href={`/dashboard?id=${team.registration_id}`} className="btn btn-outline btn-sm btn-block">
-                  View My Dashboard
-                </Link>
               </div>
             </div>
           </div>

@@ -1092,47 +1092,43 @@ tbody tr:last-child td { border-bottom: none; }
 
 /* ========== PRINT STYLES (PDF TICKET) ========== */
 @media print {
-  /* Hide unnecessary elements */
-  header, footer, nav, .navbar, .footer, .success-icon, h1, p,
-  .page-wrapper > div:first-child,
-  .container > div > div:first-child,
-  .qr-pass + div,
-  .admin-sidebar, .admin-header, .filter-bar {
-    display: none !important;
+  /* Reset body and hide all background graphics / dark layouts */
+  html, body {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  /* Reset main layouts for print centering */
-  .page-wrapper {
-    padding-top: 0 !important;
-  }
-  .section {
-    padding: 0 !important;
-  }
-  .container {
-    max-width: 100% !important;
-    width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  .container > div {
-    display: block !important;
-    grid-template-columns: 1fr !important;
+  /* Hide everything by default */
+  body * {
+    visibility: hidden !important;
   }
 
-  /* Clean Pass Styling for Paper/PDF */
+  /* Make ONLY the pass card and its elements visible */
+  .qr-pass, .qr-pass * {
+    visibility: visible !important;
+  }
+
+  /* Center the ticket pass perfectly on the page */
   .qr-pass {
-    margin: 25mm auto !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 0 !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 420px !important;
+    margin: 0 auto !important;
+    padding: 2rem !important;
     border: 2px solid #6c63ff !important;
     background: #ffffff !important;
     color: #1a1a2e !important;
     box-shadow: none !important;
     border-radius: 12px !important;
-    page-break-inside: avoid;
-    width: 100% !important;
-    max-width: 420px !important;
-    padding: 2rem !important;
+    page-break-inside: avoid !important;
   }
-  
+
   .qr-pass-logo {
     color: #6c63ff !important;
     background: none !important;
@@ -1148,8 +1144,6 @@ tbody tr:last-child td { border-bottom: none; }
     background: rgba(108, 99, 255, 0.08) !important;
     color: #6c63ff !important;
     border: 1px solid rgba(108, 99, 255, 0.25) !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
   }
 
   .qr-pass-label {
@@ -1160,8 +1154,9 @@ tbody tr:last-child td { border-bottom: none; }
     color: #1e293b !important;
   }
 
-  /* Hide print/download buttons inside the pass card on print */
-  .qr-pass button, .qr-pass .btn, .qr-pass .pass-actions {
+  /* Hide the action buttons container on print */
+  .qr-pass .pass-actions, .qr-pass .pass-actions * {
     display: none !important;
+    visibility: hidden !important;
   }
 }
