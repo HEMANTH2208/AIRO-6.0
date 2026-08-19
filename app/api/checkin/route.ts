@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await req.json();
-    const { registration_id } = body;
+    const { registration_id, undo } = body;
 
     if (!registration_id) {
       return NextResponse.json({ error: "Registration ID required" }, { status: 400 });
@@ -25,6 +25,17 @@ export async function POST(req: NextRequest) {
 
     if (!team.registration) {
       return NextResponse.json({ error: "Registration record not found" }, { status: 404 });
+    }
+
+    if (undo) {
+      await prisma.registration.update({
+        where: { team_id: team.id },
+        data: {
+          checked_in: 0,
+          checked_in_at: null,
+        },
+      });
+      return NextResponse.json({ success: true, message: "Check-in undone successfully" });
     }
 
     if (team.registration.checked_in) {

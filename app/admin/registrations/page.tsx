@@ -58,7 +58,7 @@ export default function AdminRegistrationsPage() {
     await fetch("/api/checkin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ registration_id: regId }),
+      body: JSON.stringify({ registration_id: regId, undo }),
     });
     load();
   };
@@ -131,8 +131,12 @@ export default function AdminRegistrationsPage() {
                     <button className="btn btn-secondary btn-sm" onClick={() => setExpanded(expanded === team.id ? null : team.id)}>
                       {expanded === team.id ? "Hide" : "View"} Members
                     </button>
-                    {!team.checked_in && (
-                      <button className="btn btn-success btn-sm" onClick={() => handleCheckin(team.registration_id)}>
+                    {team.checked_in ? (
+                      <button className="btn btn-outline btn-sm" style={{ color: "var(--warning)", borderColor: "var(--warning)" }} onClick={() => handleCheckin(team.registration_id, true)}>
+                        Undo Check In
+                      </button>
+                    ) : (
+                      <button className="btn btn-success btn-sm" onClick={() => handleCheckin(team.registration_id, false)}>
                         Check In
                       </button>
                     )}

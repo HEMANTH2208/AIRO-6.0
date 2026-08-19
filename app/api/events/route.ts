@@ -41,7 +41,9 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json({ events });
+    const totalTeams = await prisma.team.count();
+
+    return NextResponse.json({ events, totalTeams });
   } catch (error) {
     console.error("GET /api/events error:", error);
     return NextResponse.json({ error: "Failed to fetch events" }, { status: 500 });
