@@ -14,7 +14,9 @@ function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
-    throw new Error("CRITICAL: DATABASE_URL environment variable is missing on hosting server! Please set DATABASE_URL in Vercel Environment Variables.");
+    throw new Error(
+      "CRITICAL: DATABASE_URL environment variable is missing on hosting server! Please set DATABASE_URL in Vercel Environment Variables."
+    );
   }
 
   const isLocal = connectionString.includes("localhost") || connectionString.includes("127.0.0.1");
@@ -22,9 +24,14 @@ function createPrismaClient(): PrismaClient {
   const pool = new Pool({
     connectionString,
     ssl: isLocal ? undefined : { rejectUnauthorized: false },
-    max: 2,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000,
+    max: 2, // Cap connection pool for serverless environments
+    idleTimeoutMillis: 20000,
+    connectionTimeoutMillis: 5000,
+  });
+
+  // MANDATORY for serverless pg.Pool: Catch idle connection drops so Node process does not crash
+  pool.on("error", (err) => {
+    console.error("⚠️ pg.Pool idle client error (handled):", err.message);
   });
 
   const adapter = new PrismaPg(pool);
