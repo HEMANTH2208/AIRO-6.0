@@ -38,7 +38,6 @@ export default function Navbar() {
       ? [
           { href: "/events", label: "Events" },
           { href: "/register", label: "Register" },
-          { href: "/dashboard", label: "My Registration" },
         ]
       : []),
     { href: "/contact", label: "About" },

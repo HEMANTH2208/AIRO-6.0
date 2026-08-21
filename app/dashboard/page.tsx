@@ -29,20 +29,46 @@ interface Team {
   registered_at: string;
 }
 
+interface RegSummary {
+  registration_id: string;
+  event_name: string;
+}
+
 function DashboardContent() {
   const searchParams = useSearchParams();
-  const [regId, setRegId] = useState(searchParams.get("id") || "");
-  const [inputId, setInputId] = useState(searchParams.get("id") || "");
+  const [allRegs, setAllRegs] = useState<RegSummary[]>([]);
+  const [selectedId, setSelectedId] = useState(searchParams.get("id") || "");
   const [team, setTeam] = useState<Team | null>(null);
   const [participants, setParticipants] = useState<Participant[]>([]);
-  const [loading, setLoading] = useState(!!searchParams.get("id"));
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [user, setUser] = useState<{ name: string } | null>(null);
+  const [expanded, setExpanded] = useState(false);
 
-  const lookup = async (id: string) => {
-    if (!id.trim()) return;
+  // Load user + all registrations on mount
+  useEffect(() => {
+    fetch("/api/participant/me")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.user) {
+          setUser(d.user);
+          setAllRegs(d.registrations || []);
+          // Auto-load from URL or first registration
+          const urlId = searchParams.get("id") || (d.registrations?.[0]?.registration_id ?? "");
+          if (urlId) {
+            setSelectedId(urlId);
+            loadReg(urlId);
+          }
+        }
+      });
+  }, []);
+
+  const loadReg = async (id: string) => {
+    if (!id) return;
     setLoading(true);
     setError("");
     setTeam(null);
+    setExpanded(false);
     try {
       const res = await fetch(`/api/registration/${encodeURIComponent(id.trim())}`);
       const data = await res.json();
@@ -56,26 +82,9 @@ function DashboardContent() {
     }
   };
 
-  useEffect(() => {
-    const urlId = searchParams.get("id");
-    if (urlId) {
-      lookup(urlId);
-    } else {
-      fetch("/api/participant/me")
-        .then((r) => r.json())
-        .then((d) => {
-          if (d.user && d.registrations?.length > 0) {
-            setInputId(d.registrations[0].registration_id);
-            lookup(d.registrations[0].registration_id);
-          }
-        });
-    }
-  }, [searchParams]);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setRegId(inputId);
-    lookup(inputId);
+  const handleSelect = (id: string) => {
+    setSelectedId(id);
+    loadReg(id);
   };
 
   const handleDownload = () => {
@@ -84,126 +93,136 @@ function DashboardContent() {
   };
 
   const lead = participants.find((p) => p.is_team_lead);
-  const membersList = participants.filter((p) => !p.is_team_lead);
+  const members = participants.filter((p) => !p.is_team_lead);
 
   return (
-    <div>
-      <div style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border)", padding: "3rem 0 2rem" }}>
+    <div className="dashboard-page">
+      {/* Page Hero */}
+      <div className="dashboard-hero">
         <div className="container">
-          <h1 style={{ marginBottom: "0.5rem" }}>My Registration</h1>
-          <p>Enter your Registration ID to view your team details and QR pass.</p>
+          <div className="dashboard-hero-inner">
+            <div>
+              <div className="badge-label">👤 My Profile</div>
+              <h1 className="dashboard-title">
+                {user ? `Welcome, ${user.name.split(" ")[0]}` : "My Registrations"}
+              </h1>
+              <p className="dashboard-subtitle">
+                {allRegs.length > 0
+                  ? `You have ${allRegs.length} registered event${allRegs.length > 1 ? "s" : ""}`
+                  : "You haven't registered for any events yet"}
+              </p>
+            </div>
+            <Link href="/register" className="btn btn-primary">
+              + Register for Event
+            </Link>
+          </div>
         </div>
       </div>
 
       <div className="section">
-        <div className="container" style={{ maxWidth: "900px" }}>
-          {/* Lookup Form */}
-          <div className="card" style={{ marginBottom: "2rem" }}>
-            <div className="card-header">
-              <div className="card-title">Look Up Registration</div>
+        <div className="container" style={{ maxWidth: "960px" }}>
+
+          {allRegs.length === 0 && !loading && (
+            <div className="empty-state fade-in">
+              <div className="empty-icon">🎟️</div>
+              <h3>No Registrations Yet</h3>
+              <p>Browse events and register your team to get started.</p>
+              <Link href="/events" className="btn btn-primary" style={{ marginTop: "1rem" }}>
+                Browse Events
+              </Link>
             </div>
-            <form onSubmit={handleSearch} style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              <input
-                className="form-control"
-                style={{ flex: 1, minWidth: "200px" }}
-                placeholder="Enter Registration ID (e.g. AIRO-TECH-xxxxx)"
-                value={inputId}
-                onChange={(e) => setInputId(e.target.value)}
-              />
-              <button type="submit" className="btn btn-primary" disabled={loading || !inputId.trim()}>
-                {loading ? <span className="loading-spinner" /> : "Look Up"}
-              </button>
-            </form>
-          </div>
+          )}
+
+          {/* Event Selector Tabs */}
+          {allRegs.length > 1 && (
+            <div className="reg-tabs fade-in">
+              {allRegs.map((reg) => (
+                <button
+                  key={reg.registration_id}
+                  className={`reg-tab${selectedId === reg.registration_id ? " active" : ""}`}
+                  onClick={() => handleSelect(reg.registration_id)}
+                >
+                  {reg.event_name}
+                </button>
+              ))}
+            </div>
+          )}
 
           {error && (
-            <div className="alert alert-error" style={{ marginBottom: "1.5rem" }}>
+            <div className="alert alert-error fade-in">
               <span>⚠️</span> {error}
             </div>
           )}
 
-          {loading && !team && (
-            <div className="page-loading" style={{ minHeight: "30vh" }}>
+          {loading && (
+            <div className="page-loading" style={{ minHeight: "200px" }}>
               <div className="page-loading-spinner" />
-              <p>Loading registration...</p>
             </div>
           )}
 
-          {team && (
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "2rem", alignItems: "start" }}>
-              {/* Left: Details */}
-              <div>
-                {/* Status Banner */}
-                <div style={{
-                  background: team.checked_in ? "var(--success-bg)" : "var(--info-bg)",
-                  border: `1px solid ${team.checked_in ? "rgba(0,212,170,0.3)" : "rgba(84,160,255,0.3)"}`,
-                  borderRadius: "var(--radius-md)", padding: "1rem 1.25rem",
-                  display: "flex", justifyContent: "space-between", alignItems: "center",
-                  flexWrap: "wrap", gap: "0.5rem", marginBottom: "1.5rem",
-                }}>
-                  <div>
-                    <div style={{ fontWeight: 700, color: "var(--text-primary)" }}>
-                      {team.checked_in ? "✓ Checked In" : "Registration Confirmed"}
-                    </div>
-                    <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                      {team.checked_in && team.checked_in_at
-                        ? `Checked in at: ${new Date(team.checked_in_at).toLocaleString()}`
-                        : "Present this QR at the venue for entry"}
-                    </div>
-                  </div>
-                  <span className={`badge ${team.checked_in ? "badge-success" : "badge-info"}`}>
-                    {team.checked_in ? "Checked In" : "Pending Entry"}
+          {team && !loading && (
+            <div className="reg-card-grid fade-in">
+              {/* Left: Summary Card */}
+              <div className="reg-summary-card">
+                {/* Status */}
+                <div className={`reg-status-bar ${team.checked_in ? "checked" : "pending"}`}>
+                  <span className="reg-status-dot" />
+                  <span>{team.checked_in ? "Checked In ✓" : "Registration Confirmed"}</span>
+                  <span className={`badge ${team.checked_in ? "badge-success" : "badge-info"}`} style={{ marginLeft: "auto" }}>
+                    {team.checked_in ? "Present" : "Pending Entry"}
                   </span>
                 </div>
 
-                <div className="card" style={{ marginBottom: "1rem" }}>
-                  <div className="card-header"><div className="card-title">Registration Info</div></div>
-                  <div className="review-row">
-                    <span className="review-label">Registration ID</span>
-                    <span className="review-value fw-bold" style={{ color: "var(--primary-light)" }}>{team.registration_id}</span>
+                {/* Core Info */}
+                <div className="reg-info-grid">
+                  <div className="reg-info-item">
+                    <div className="reg-info-label">Registration ID</div>
+                    <div className="reg-info-value primary">{team.registration_id}</div>
                   </div>
-                  <div className="review-row">
-                    <span className="review-label">Event</span>
-                    <span className="review-value">{team.event_name}</span>
+                  <div className="reg-info-item">
+                    <div className="reg-info-label">Event</div>
+                    <div className="reg-info-value">{team.event_name}</div>
                   </div>
-                  <div className="review-row">
-                    <span className="review-label">Team Name</span>
-                    <span className="review-value">{team.team_name}</span>
+                  <div className="reg-info-item">
+                    <div className="reg-info-label">Team Name</div>
+                    <div className="reg-info-value">{team.team_name}</div>
                   </div>
-                  <div className="review-row">
-                    <span className="review-label">College</span>
-                    <span className="review-value">{team.college_name}</span>
+                  <div className="reg-info-item">
+                    <div className="reg-info-label">College</div>
+                    <div className="reg-info-value">{team.college_name}</div>
                   </div>
-                  <div className="review-row">
-                    <span className="review-label">Department</span>
-                    <span className="review-value">{team.department}</span>
+                  <div className="reg-info-item">
+                    <div className="reg-info-label">Members</div>
+                    <div className="reg-info-value">{participants.length}</div>
                   </div>
-                  <div className="review-row">
-                    <span className="review-label">Registered</span>
-                    <span className="review-value">{new Date(team.registered_at).toLocaleString("en-IN")}</span>
+                  <div className="reg-info-item">
+                    <div className="reg-info-label">Registered On</div>
+                    <div className="reg-info-value">{new Date(team.registered_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</div>
                   </div>
                 </div>
 
-                {lead && (
-                  <div className="card" style={{ marginBottom: "1rem" }}>
-                    <div className="card-header"><div className="card-title">Team Lead</div></div>
-                    <div className="review-row"><span className="review-label">Name</span><span className="review-value">{lead.name}</span></div>
-                    <div className="review-row"><span className="review-label">Student ID</span><span className="review-value">{lead.student_id}</span></div>
-                    <div className="review-row"><span className="review-label">Email</span><span className="review-value">{lead.email}</span></div>
-                    <div className="review-row"><span className="review-label">Phone</span><span className="review-value">{lead.phone}</span></div>
-                  </div>
-                )}
+                {/* Expand toggle */}
+                <button
+                  className="expand-toggle"
+                  onClick={() => setExpanded(!expanded)}
+                >
+                  {expanded ? "▲ Hide team details" : "▼ View team details"}
+                </button>
 
-                {membersList.length > 0 && (
-                  <div className="card">
-                    <div className="card-header"><div className="card-title">Team Members</div></div>
-                    {membersList.map((m, i) => (
-                      <div key={m.id} style={{ paddingBottom: i < membersList.length - 1 ? "1rem" : 0, marginBottom: i < membersList.length - 1 ? "1rem" : 0, borderBottom: i < membersList.length - 1 ? "1px solid var(--border)" : "none" }}>
-                        <div style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: "0.9rem", marginBottom: "0.5rem" }}>Member {i + 1}</div>
-                        <div className="review-row"><span className="review-label">Name</span><span className="review-value">{m.name}</span></div>
-                        <div className="review-row"><span className="review-label">Student ID</span><span className="review-value">{m.student_id}</span></div>
-                        <div className="review-row"><span className="review-label">Email</span><span className="review-value">{m.email}</span></div>
-                        <div className="review-row"><span className="review-label">Phone</span><span className="review-value">{m.phone}</span></div>
+                {expanded && (
+                  <div className="team-details fade-in">
+                    {lead && (
+                      <div className="team-member-card lead">
+                        <div className="member-badge">Team Lead</div>
+                        <div className="member-name">{lead.name}</div>
+                        <div className="member-meta">{lead.student_id} · {lead.email}</div>
+                      </div>
+                    )}
+                    {members.map((m, i) => (
+                      <div key={m.id} className="team-member-card">
+                        <div className="member-badge">Member {i + 1}</div>
+                        <div className="member-name">{m.name}</div>
+                        <div className="member-meta">{m.student_id} · {m.email}</div>
                       </div>
                     ))}
                   </div>
@@ -211,39 +230,27 @@ function DashboardContent() {
               </div>
 
               {/* Right: QR Pass */}
-              <div>
-                <div className="qr-pass" style={{ position: "sticky", top: "80px" }}>
-                  <div className="qr-pass-header">
-                    <div className="qr-pass-logo">AIRO 6.0</div>
-                    <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Dept. of AI & DS · Sairam Engineering College</div>
+              <div className="qr-pass" style={{ position: "sticky", top: "80px" }}>
+                <div className="qr-pass-header">
+                  <div className="qr-pass-logo">AIRO 6.0</div>
+                  <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Dept. of AI &amp; DS · Sairam Engineering College</div>
+                </div>
+                <div className="qr-reg-id">{team.registration_id}</div>
+                {team.qr_code && (
+                  <div className="qr-code-wrapper">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={team.qr_code} alt="QR Code" style={{ width: "180px", height: "180px" }} />
                   </div>
-                  <div className="qr-reg-id">{team.registration_id}</div>
-                  {team.qr_code && (
-                    <div className="qr-code-wrapper">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={team.qr_code} alt="QR Code" style={{ width: "180px", height: "180px" }} />
-                    </div>
-                  )}
-                  <div className="qr-pass-info">
-                    <div className="qr-pass-row"><span className="qr-pass-label">Event</span><span className="qr-pass-value">{team.event_name}</span></div>
-                    <div className="qr-pass-row"><span className="qr-pass-label">Team</span><span className="qr-pass-value">{team.team_name}</span></div>
-                    <div className="qr-pass-row"><span className="qr-pass-label">Members</span><span className="qr-pass-value">{participants.length}</span></div>
-                  </div>
-                  <div className="pass-actions" style={{ display: "flex", marginTop: "1rem" }}>
-                    <button className="btn btn-primary btn-sm btn-block" onClick={handleDownload}>↓ Download QR Pass</button>
-                  </div>
+                )}
+                <div className="qr-pass-info">
+                  <div className="qr-pass-row"><span className="qr-pass-label">Event</span><span className="qr-pass-value">{team.event_name}</span></div>
+                  <div className="qr-pass-row"><span className="qr-pass-label">Team</span><span className="qr-pass-value">{team.team_name}</span></div>
+                  <div className="qr-pass-row"><span className="qr-pass-label">Members</span><span className="qr-pass-value">{participants.length}</span></div>
+                </div>
+                <div className="pass-actions" style={{ display: "flex", marginTop: "1rem" }}>
+                  <button className="btn btn-primary btn-sm btn-block" onClick={handleDownload}>↓ Download QR Pass</button>
                 </div>
               </div>
-            </div>
-          )}
-
-          {!team && !loading && !error && (
-            <div style={{ textAlign: "center", padding: "4rem 2rem", color: "var(--text-muted)" }}>
-              <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔍</div>
-              <p>Enter your Registration ID above to view your registration details.</p>
-              <p style={{ fontSize: "0.85rem", marginTop: "0.5rem" }}>
-                Don&apos;t have one? <Link href="/register" style={{ color: "var(--primary-light)" }}>Register here</Link>
-              </p>
             </div>
           )}
         </div>
