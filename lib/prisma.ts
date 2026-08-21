@@ -3,7 +3,6 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import dotenv from "dotenv";
 
-// Ensure environment variables from .env.local are loaded if running outside Next.js lifecycle (e.g. scripts, seeds)
 if (!process.env.DATABASE_URL) {
   dotenv.config({ path: ".env.local" });
   dotenv.config();
@@ -15,13 +14,13 @@ function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
-    console.error("❌ CRITICAL: DATABASE_URL is not set in environment variables!");
+    throw new Error("CRITICAL ERROR: DATABASE_URL environment variable is missing in Vercel environment settings! Please add DATABASE_URL in Vercel Dashboard -> Settings -> Environment Variables.");
   }
 
-  const isLocal = connectionString?.includes("localhost") || connectionString?.includes("127.0.0.1");
+  const isLocal = connectionString.includes("localhost") || connectionString.includes("127.0.0.1");
 
   const pool = new Pool({
-    connectionString: connectionString || "",
+    connectionString,
     ssl: isLocal ? undefined : { rejectUnauthorized: false },
     max: 2, // Cap connection pool for serverless environments
     idleTimeoutMillis: 30000,
