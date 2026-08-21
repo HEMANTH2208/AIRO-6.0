@@ -67,6 +67,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Exactly one team lead is required" }, { status: 400 });
     }
 
+    // Check if logged-in session user is already registered for this event
+    if (sessionEmail) {
+      const existingSessionReg = await prisma.participant.findFirst({
+        where: {
+          email: { equals: sessionEmail, mode: "insensitive" },
+          team: { event_id: Number(event_id) },
+        },
+      });
+      if (existingSessionReg) {
+        return NextResponse.json(
+          { error: `You have already registered for "${event.name}". Each email can register for an event only once.` },
+          { status: 409 }
+        );
+      }
+    }
+
     // Check for duplicate student IDs, emails, phones within this submission
     const studentIds = members.map((m: ParticipantInput) => m.student_id.trim());
     const emails = members.map((m: ParticipantInput) => m.email.trim().toLowerCase());
@@ -108,7 +124,7 @@ export async function POST(req: NextRequest) {
       });
       if (existing) {
         return NextResponse.json(
-          { error: `Email ${email} is already registered for this event` },
+          { error: `Email ${email} is already registered for "${event.name}"` },
           { status: 409 }
         );
       }
