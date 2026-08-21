@@ -17,11 +17,20 @@ export function getPrisma(): PrismaClient {
     return globalForPrisma.prisma;
   }
 
-  const connectionString = process.env.DATABASE_URL;
+  let connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
     throw new Error(
       "CRITICAL: DATABASE_URL environment variable is missing on hosting server! Please set DATABASE_URL in Vercel Environment Variables."
+    );
+  }
+
+  // Auto-correct invalid hostname/port combination:
+  // db.xxx.supabase.co does NOT run pooler on port 6543; pooler is hosted on pooler.supabase.com
+  if (connectionString.includes(".supabase.co:6543")) {
+    connectionString = connectionString.replace(
+      /db\.([a-z0-9]+)\.supabase\.co:6543/g,
+      "aws-0-ap-southeast-1.pooler.supabase.com:6543"
     );
   }
 
@@ -32,7 +41,7 @@ export function getPrisma(): PrismaClient {
     ssl: isLocal ? undefined : { rejectUnauthorized: false },
     max: 2,
     idleTimeoutMillis: 20000,
-    connectionTimeoutMillis: 5000,
+    connectionTimeoutMillis: 10000,
   });
 
   pool.on("error", (err) => {
