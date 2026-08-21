@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -11,6 +11,7 @@ export default function Navbar() {
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
   const [registrations, setRegistrations] = useState<any[]>([]);
   const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch("/api/participant/me")
@@ -20,6 +21,18 @@ export default function Navbar() {
         setRegistrations(d.registrations || []);
       });
   }, [pathname]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setProfileOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleLogout = async () => {
     setProfileOpen(false);
@@ -67,7 +80,7 @@ export default function Navbar() {
 
         <div className={`nav-cta${menuOpen ? " open" : ""}`} style={{ position: "relative" }}>
           {user ? (
-            <div style={{ position: "relative" }}>
+            <div ref={profileRef} style={{ position: "relative" }}>
               <button
                 className="btn btn-secondary btn-sm"
                 onClick={() => setProfileOpen(!profileOpen)}
