@@ -76,8 +76,8 @@ export default function ContactPage() {
               <div>
                 <div style={{ fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.75rem" }}>AIRO 6.0 Committee</div>
                 <p style={{ fontSize: "0.9rem", lineHeight: 1.8 }}>
-                  📧 <a href="mailto:airo@sairam.edu.in" style={{ color: "var(--primary-light)" }}>airo@sairam.edu.in</a><br />
-                  🌐 <a href="https://www.sairamengineering.edu.in" target="_blank" rel="noreferrer" style={{ color: "var(--primary-light)" }}>sairamengineering.edu.in</a>
+                  📧 <a href="mailto:airo-6.0.sairam@gmail.com" style={{ color: "var(--primary-light)" }}>airo-6.0.sairam@gmail.com</a><br />
+                  🌐 <a href="https://www.sairam.edu.in" target="_blank" rel="noreferrer" style={{ color: "var(--primary-light)" }}>sairam.edu.in</a>
                 </p>
               </div>
             </div>
