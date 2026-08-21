@@ -389,9 +389,6 @@ export default function HomePage() {
               <Link href="/events" className="btn btn-secondary btn-xl">
                 View Events →
               </Link>
-              <button onClick={handleLogout} className="btn btn-secondary btn-xl" style={{ border: "1px dashed var(--error)", color: "var(--error)" }}>
-                Logout
-              </button>
             </div>
 
             <div className="hero-stats">
