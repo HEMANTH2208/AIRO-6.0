@@ -8,13 +8,13 @@ if (!process.env.DATABASE_URL) {
   dotenv.config();
 }
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const globalForPrisma = global as unknown as { prisma?: PrismaClient };
 
 function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
-    throw new Error("CRITICAL ERROR: DATABASE_URL environment variable is missing in Vercel environment settings! Please add DATABASE_URL in Vercel Dashboard -> Settings -> Environment Variables.");
+    throw new Error("CRITICAL: DATABASE_URL environment variable is missing on hosting server! Please set DATABASE_URL in Vercel Environment Variables.");
   }
 
   const isLocal = connectionString.includes("localhost") || connectionString.includes("127.0.0.1");
@@ -22,7 +22,7 @@ function createPrismaClient(): PrismaClient {
   const pool = new Pool({
     connectionString,
     ssl: isLocal ? undefined : { rejectUnauthorized: false },
-    max: 2, // Cap connection pool for serverless environments
+    max: 2,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
   });
@@ -35,9 +35,22 @@ function createPrismaClient(): PrismaClient {
   });
 }
 
-if (!globalForPrisma.prisma) {
-  globalForPrisma.prisma = createPrismaClient();
+function getPrisma(): PrismaClient {
+  if (!globalForPrisma.prisma) {
+    globalForPrisma.prisma = createPrismaClient();
+  }
+  return globalForPrisma.prisma;
 }
 
-export const prisma = globalForPrisma.prisma;
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop: keyof PrismaClient) {
+    const client = getPrisma();
+    const value = client[prop];
+    if (typeof value === "function") {
+      return value.bind(client);
+    }
+    return value;
+  },
+});
+
 export default prisma;
