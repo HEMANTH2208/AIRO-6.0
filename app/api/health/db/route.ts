@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   const dbUrl = process.env.DATABASE_URL || "";
-  
-  // Safely mask password in URL for diagnostic output
-  const maskedUrl = dbUrl.replace(/:[^:@]+@/, ":****@");
+  const maskedUrl = dbUrl ? dbUrl.replace(/:[^:@]+@/, ":****@") : "NOT SET (MISSING)";
 
   const diagnosticInfo = {
     timestamp: new Date().toISOString(),
@@ -22,7 +20,8 @@ export async function GET() {
   };
 
   try {
-    const eventCount = await prisma.event.count();
+    const client = getPrisma();
+    const eventCount = await client.event.count();
     diagnosticInfo.databaseTest = `SUCCESS! Found ${eventCount} events.`;
     return NextResponse.json(diagnosticInfo, { status: 200 });
   } catch (err: any) {
