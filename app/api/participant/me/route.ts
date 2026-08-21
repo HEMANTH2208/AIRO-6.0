@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { decrypt } from "@/lib/token";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const sessionCookie = req.cookies.get("participant_session")?.value;
@@ -15,6 +17,7 @@ export async function GET(req: NextRequest) {
     }
 
     const decrypted = JSON.parse(decryptedStr);
+    const userEmail = decrypted.email ? decrypted.email.trim().toLowerCase() : "";
 
     // Fetch all registrations where this participant email is registered
     const registrations = await prisma.registration.findMany({
@@ -23,7 +26,7 @@ export async function GET(req: NextRequest) {
           participants: {
             some: {
               email: {
-                equals: decrypted.email,
+                equals: userEmail,
                 mode: "insensitive",
               },
             },

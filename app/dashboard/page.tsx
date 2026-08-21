@@ -61,7 +61,7 @@ function DashboardContent() {
           }
         }
       });
-  }, []);
+  }, [searchParams]);
 
   const loadReg = async (id: string) => {
     if (!id) return;

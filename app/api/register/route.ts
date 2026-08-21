@@ -47,9 +47,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Check for duplicate student IDs, emails, phones within this submission
-    const studentIds = members.map((m: ParticipantInput) => m.student_id);
-    const emails = members.map((m: ParticipantInput) => m.email);
-    const phones = members.map((m: ParticipantInput) => m.phone);
+    const studentIds = members.map((m: ParticipantInput) => m.student_id.trim());
+    const emails = members.map((m: ParticipantInput) => m.email.trim().toLowerCase());
+    const phones = members.map((m: ParticipantInput) => m.phone.trim());
 
     if (new Set(studentIds).size !== studentIds.length) {
       return NextResponse.json({ error: "Duplicate student IDs in team" }, { status: 400 });
@@ -77,11 +77,11 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Check for duplicate emails in DB
+    // Check for duplicate emails in DB (case insensitive)
     for (const email of emails) {
       const existing = await prisma.participant.findFirst({
         where: {
-          email,
+          email: { equals: email, mode: "insensitive" },
           team: { event_id: Number(event_id) },
         },
       });
@@ -138,10 +138,10 @@ export async function POST(req: NextRequest) {
       await tx.participant.createMany({
         data: members.map((member: ParticipantInput) => ({
           team_id: team.id,
-          name: member.name,
-          student_id: member.student_id,
-          email: member.email,
-          phone: member.phone,
+          name: member.name.trim(),
+          student_id: member.student_id.trim(),
+          email: member.email.trim().toLowerCase(),
+          phone: member.phone.trim(),
           is_team_lead: member.is_team_lead ? 1 : 0,
         })),
       });
