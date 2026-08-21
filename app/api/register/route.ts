@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateQRCode, generateRegistrationId } from "@/lib/qr";
+import { decrypt } from "@/lib/token";
 
 interface ParticipantInput {
   name: string;
@@ -12,8 +13,28 @@ interface ParticipantInput {
 
 export async function POST(req: NextRequest) {
   try {
+    const sessionCookie = req.cookies.get("participant_session")?.value;
+    let sessionEmail = "";
+    if (sessionCookie) {
+      const decryptedStr = decrypt(sessionCookie);
+      if (decryptedStr) {
+        try {
+          const decrypted = JSON.parse(decryptedStr);
+          sessionEmail = decrypted.email ? decrypted.email.trim().toLowerCase() : "";
+        } catch {}
+      }
+    }
+
     const body = await req.json();
     const { event_id, team_name, college_name, department, members } = body;
+
+    // If user is logged in, ensure the team lead email matches sessionEmail if provided
+    if (sessionEmail && Array.isArray(members)) {
+      const leadIdx = members.findIndex((m: ParticipantInput) => m.is_team_lead);
+      if (leadIdx !== -1 && !members.some((m: ParticipantInput) => m.email.trim().toLowerCase() === sessionEmail)) {
+        members[leadIdx].email = sessionEmail;
+      }
+    }
 
     // Basic required field check
     if (!event_id || !team_name || !college_name || !department || !members) {
