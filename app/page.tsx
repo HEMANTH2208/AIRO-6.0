@@ -460,7 +460,20 @@ export default function HomePage() {
 
                   <div style={{ marginTop: "auto", paddingTop: "1rem" }}>
                     <button
-                      className="btn btn-primary btn-sm btn-block"
+                      className="btn btn-primary btn-lg btn-block"
+                      style={{
+                        padding: "0.85rem 1.5rem",
+                        fontSize: "1rem",
+                        fontWeight: 700,
+                        minHeight: "50px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.5rem",
+                        boxShadow: "0 4px 20px rgba(99, 102, 241, 0.4)",
+                        borderRadius: "var(--radius-md)",
+                        cursor: "pointer",
+                      }}
                       onClick={() => handleDownloadPass(reg)}
                     >
                       ↓ Download Entry Pass
