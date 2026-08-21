@@ -4,13 +4,6 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["sin1"],
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "ADMIN_EMAIL": "@admin_email",
-    "ADMIN_PASSWORD": "@admin_password",
-    "JWT_SECRET": "@jwt_secret",
-    "NEXT_PUBLIC_APP_URL": "@app_url"
-  },
   "headers": [
     {
       "source": "/(.*)",
