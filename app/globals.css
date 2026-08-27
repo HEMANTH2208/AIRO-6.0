@@ -47,7 +47,7 @@
 
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #00d4ff 0%, #0066ff 100%);
-  --gradient-hero: linear-gradient(135deg, #06080c 0%, #08101a 40%, #0a1524 70%, #060c14 100%);
+  --gradient-hero: linear-gradient(135deg, rgba(6, 8, 12, 0.4) 0%, rgba(8, 16, 26, 0.4) 100%);
   --gradient-card: linear-gradient(145deg, rgba(15, 22, 34, 0.78), rgba(21, 31, 48, 0.78));
   --gradient-accent: linear-gradient(135deg, #00d4ff 0%, #ffaa00 100%);
   --gradient-cybertron: linear-gradient(135deg, #00d4ff, #0066ff, #00d4ff);
@@ -517,7 +517,7 @@ tbody tr:last-child td { border-bottom: none; }
   min-height: 100vh;
   display: flex;
   align-items: center;
-  background: var(--gradient-hero);
+  background: transparent;
   position: relative;
   overflow: hidden;
 }

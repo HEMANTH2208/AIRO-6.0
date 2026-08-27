@@ -43,7 +43,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [1.6, 2.2, 0.8],
     offset: 0.0, width: 0.35,
-    color: "#c8102e", // Optimus Crimson
+    color: "#ff2244", // High-Vis Crimson Red
   },
   // Hood → chest plate
   hood: {
@@ -54,7 +54,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [1.4, 0.8, 0.12],
     offset: 0.12, width: 0.28,
-    color: "#dc2626", emissive: true, // Bright Crimson chest
+    color: "#f59e0b", emissive: true, // Gleaming Gold Chest Plate
   },
   // Roof → head
   roof: {
@@ -65,7 +65,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.95, 0.85, 0.75],
     offset: 0.22, width: 0.22,
-    color: "#b91c1c", // Darker Crimson Head
+    color: "#ff1e42", // High-Vis Crimson Head
   },
   // Left door → left arm
   doorL: {
@@ -76,7 +76,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0.15],
     robotScale: [0.32, 1.6, 0.32],
     offset: 0.15, width: 0.28,
-    color: "#2563eb", // Cobalt Blue arm
+    color: "#38bdf8", // Bright Electric Cyan Arm
   },
   // Right door → right arm
   doorR: {
@@ -87,7 +87,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, -0.15],
     robotScale: [0.32, 1.6, 0.32],
     offset: 0.15, width: 0.28,
-    color: "#2563eb", // Cobalt Blue arm
+    color: "#38bdf8", // Bright Electric Cyan Arm
   },
   // Front-left wheel → left shoulder pad
   wheelFL: {
@@ -98,7 +98,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.55, 0.25, 0.55],
     offset: 0.05, width: 0.3,
-    color: "#64748b", // Silver Alloy
+    color: "#f8fafc", // Gleaming Chrome Silver
     geometry: "cylinder",
     cylinderArgs: [0.5, 0.5, 0.3, 12],
   },
@@ -111,7 +111,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.55, 0.25, 0.55],
     offset: 0.05, width: 0.3,
-    color: "#64748b", // Silver Alloy
+    color: "#f8fafc", // Gleaming Chrome Silver
     geometry: "cylinder",
     cylinderArgs: [0.5, 0.5, 0.3, 12],
   },
@@ -124,7 +124,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.6, 0.28, 0.6],
     offset: 0.25, width: 0.28,
-    color: "#475569", // Dark Silver Foot
+    color: "#e2e8f0", // Bright Chrome Foot
     geometry: "cylinder",
     cylinderArgs: [0.5, 0.5, 0.3, 12],
   },
@@ -137,7 +137,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.6, 0.28, 0.6],
     offset: 0.25, width: 0.28,
-    color: "#475569", // Dark Silver Foot
+    color: "#e2e8f0", // Bright Chrome Foot
     geometry: "cylinder",
     cylinderArgs: [0.5, 0.5, 0.3, 12],
   },
@@ -150,7 +150,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.38, 1.4, 0.38],
     offset: 0.3, width: 0.28,
-    color: "#1d4ed8", // Deep Cobalt Leg
+    color: "#00f0ff", // Vibrant Energon Cyan Leg
   },
   // Right leg
   legR: {
@@ -161,7 +161,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.38, 1.4, 0.38],
     offset: 0.3, width: 0.28,
-    color: "#1d4ed8", // Deep Cobalt Leg
+    color: "#00f0ff", // Vibrant Energon Cyan Leg
   },
   // Windshield → visor/face panel
   windshield: {
@@ -172,7 +172,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.7, 0.28, 0.05],
     offset: 0.24, width: 0.2,
-    color: "#00f0ff", emissive: true,
+    color: "#00ffaa", emissive: true, // Neon Energon Green Visor
   },
   // Left headlight → left eye
   headlightL: {
@@ -183,7 +183,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.2, 0.14, 0.06],
     offset: 0.28, width: 0.18,
-    color: "#00f0ff", emissive: true,
+    color: "#00ffaa", emissive: true, // Neon Green Eye
     geometry: "sphere",
   },
   // Right headlight → right eye
@@ -195,7 +195,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.2, 0.14, 0.06],
     offset: 0.28, width: 0.18,
-    color: "#00f0ff", emissive: true,
+    color: "#00ffaa", emissive: true, // Neon Green Eye
     geometry: "sphere",
   },
 };
@@ -209,23 +209,21 @@ function TransformPart({ def, t, name }: { def: PartDef; t: number; name: string
   // Materials
   const mat = useMemo(() => {
     const isEmissive = def.emissive;
-    const baseColor = def.color ?? "#0d1e33";
+    const baseColor = def.color ?? "#ff2244";
     if (isEmissive) {
       return new THREE.MeshStandardMaterial({
         color: new THREE.Color(baseColor),
-        emissive: new THREE.Color("#00d4ff"),
-        emissiveIntensity: 0,
-        metalness: 0.6,
-        roughness: 0.3,
-        transparent: baseColor === "#001a33",
-        opacity: baseColor === "#001a33" ? 0.55 : 1,
+        emissive: new THREE.Color(baseColor === "#f59e0b" ? "#ffaa00" : "#00ffaa"),
+        emissiveIntensity: 0.8,
+        metalness: 0.85,
+        roughness: 0.15,
       });
     }
     return new THREE.MeshStandardMaterial({
       color: new THREE.Color(baseColor),
-      metalness: 0.75,
-      roughness: 0.25,
-      envMapIntensity: 1.2,
+      metalness: 0.9,
+      roughness: 0.12,
+      envMapIntensity: 1.8,
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [def.color, def.emissive]);
@@ -387,16 +385,16 @@ function SceneController({ t }: { t: number }) {
     <>
       <spotLight
         ref={keyLightRef}
-        position={[5, 10, 6]}
-        angle={0.55}
-        penumbra={0.5}
+        position={[6, 12, 8]}
+        angle={0.6}
+        penumbra={0.4}
         castShadow
         shadow-mapSize={[1024, 1024]}
       />
-      <pointLight ref={fillLightRef} position={[0, 1.5, 4]} color="#ffaa00" />
-      <pointLight position={[-6, 3, -4]} color="#00d4ff" intensity={2.5} />
-      <pointLight position={[4, 2, -5]} color="#ffffff" intensity={1.8} />
-      <ambientLight intensity={1.2} color="#1a3a5c" />
+      <pointLight ref={fillLightRef} position={[0, 2, 5]} color="#ffaa00" />
+      <pointLight position={[-6, 4, 4]} color="#00ffaa" intensity={4.0} />
+      <pointLight position={[6, 4, 4]} color="#ff2244" intensity={4.0} />
+      <ambientLight intensity={2.0} color="#ffffff" />
     </>
   );
 }
