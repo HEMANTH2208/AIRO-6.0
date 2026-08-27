@@ -254,15 +254,16 @@ export default function HomePage() {
   if (!user) {
     return (
       <>
-        {/* 3D Hero — visible to all visitors */}
+        {/* Fixed 3D Hero Background — visible to all visitors */}
         {useFallback ? <TransformerHeroFallback /> : <TransformerHero />}
 
-        {/* Auth gate below the hero */}
-        <div
-          id="auth-gate"
-          className="section"
-          style={{ minHeight: "60vh", display: "flex", alignItems: "center" }}
-        >
+        {/* Auth gate with proper z-index to appear above background */}
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div
+            id="auth-gate"
+            className="section"
+            style={{ minHeight: "100vh", display: "flex", alignItems: "center" }}
+          >
           <div className="container" style={{ maxWidth: "460px" }}>
           <div style={{ textAlign: "center", marginBottom: "2rem" }}>
             {/* Cybertron Core Symbol */}
@@ -426,6 +427,7 @@ export default function HomePage() {
           </div>
         </div>
         </div>
+        </div> {/* End of content wrapper with z-index */}
       </>
     );
   }
@@ -433,10 +435,12 @@ export default function HomePage() {
   // 2. RENDER MAIN SYMPOSIUM CONTENT AND PROFILE IF LOGGED IN
   return (
     <>
-      {/* 3D TRANSFORMER HERO — visible to logged-in users too */}
+      {/* Fixed 3D TRANSFORMER HERO Background — spans entire page */}
       {useFallback ? <TransformerHeroFallback /> : <TransformerHero />}
 
-      {/* HERO BAND — compact welcome strip post-animation */}
+      {/* All content with proper z-index to appear above background */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {/* INFO BANNER — CYBERTRON STATUS */}
       <section className="hero" style={{ paddingTop: "3rem", paddingBottom: "2rem", minHeight: "auto" }}>
         <div className="hero-shapes">
           <div className="shape shape-1" />
@@ -773,6 +777,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      </div> {/* End of content wrapper with z-index */}
     </>
   );
 }

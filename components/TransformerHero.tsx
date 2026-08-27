@@ -762,12 +762,13 @@ function TransformerHeroInner({ t }: TransformerHeroInnerProps) {
   return (
     <div
       style={{
-        position: "sticky",
+        position: "absolute",
         top: 0,
-        height: "100vh",
+        left: 0,
+        height: "100%",
         width: "100%",
         overflow: "hidden",
-        background: "transparent",
+        background: "linear-gradient(180deg, #0a0a0f 0%, #0d1117 50%, #0a0a0f 100%)",
       }}
     >
       {/* 3D Canvas */}
@@ -813,71 +814,33 @@ function TransformerHeroInner({ t }: TransformerHeroInnerProps) {
 
 export default function TransformerHero() {
   const [t, setT] = useState(0);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number | null>(null);
-  const tRef = useRef(0);
 
   useEffect(() => {
-    let gsap: typeof import("gsap").gsap;
-    let ScrollTrigger: typeof import("gsap/ScrollTrigger").ScrollTrigger;
-    let ctx: ReturnType<typeof gsap.context>;
-
-    const init = async () => {
-      const gsapMod = await import("gsap");
-      const stMod = await import("gsap/ScrollTrigger");
-      gsap = gsapMod.gsap;
-      ScrollTrigger = stMod.ScrollTrigger;
-      gsap.registerPlugin(ScrollTrigger);
-
-      if (!triggerRef.current) return;
-
-      ctx = gsap.context(() => {
-        ScrollTrigger.create({
-          trigger: triggerRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.2,
-          onUpdate(self) {
-            tRef.current = self.progress;
-            // Batch state updates via rAF to avoid 60+ React re-renders/sec
-            if (rafRef.current === null) {
-              rafRef.current = requestAnimationFrame(() => {
-                setT(tRef.current);
-                rafRef.current = null;
-              });
-            }
-          },
-        });
-      });
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = Math.min(scrolled / Math.max(maxScroll, 1), 1);
+      setT(progress);
     };
 
-    init();
-
-    return () => {
-      ctx?.revert();
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial calc
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <>
-      <style>{`
-        @keyframes scrollBounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(5px); }
-        }
-      `}</style>
-
-      {/* Scroll trigger container — gives us the scroll distance to track */}
-      <div
-        ref={triggerRef}
-        style={{
-          height: "280vh",
-          position: "relative",
-        }}
-      >
-        <TransformerHeroInner t={t} />
-      </div>
-    </>
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100vh",
+        zIndex: 0,
+        pointerEvents: "none",
+      }}
+    >
+      <TransformerHeroInner t={t} />
+    </div>
   );
 }
