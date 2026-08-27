@@ -47,33 +47,6 @@ async function main() {
       max_team_size: 3,
     },
     {
-      name: "Prompt-to-Product",
-      slug: "prompt-to-product",
-      description:
-        "Teams transform a real-world problem into an AI-powered solution and functional prototype. The challenge is to leverage AI tools and prompt engineering to rapidly prototype a working product.",
-      duration: "60–90 minutes",
-      min_team_size: 2,
-      max_team_size: 4,
-    },
-    {
-      name: "AI Pitch",
-      slug: "ai-pitch",
-      description:
-        "Teams develop an AI-based startup solution and present its problem, solution, prototype, feasibility, and business potential in a 5-minute pitch. Includes both preparation and presentation phases.",
-      duration: "45–60 minutes preparation + 5-minute pitch",
-      min_team_size: 2,
-      max_team_size: 4,
-    },
-    {
-      name: "VibeCraft",
-      slug: "vibecraft",
-      description:
-        "An AI creation challenge involving image recreation, design adaptation, and AI-assisted website development. Teams showcase creativity and technical skill through AI-powered design and development tasks.",
-      duration: "Approximately 1.5 hours",
-      min_team_size: 2,
-      max_team_size: 2,
-    },
-    {
       name: "Code Combat",
       slug: "code-combat",
       description:

@@ -54,13 +54,10 @@ interface User {
 
 const EVENT_ICONS: Record<string, string> = {
   "tech-auction": "🤖",
-  "tech-crime-scene": "🔊",
-  "agentic-paradox": "🦾",
-  "prompt-to-product": "⚡",
-  "ai-pitch": "🦖",
-  "vibecraft": "⚔️",
-  "code-combat": "⚙️",
-  "paper-presentation": "📡",
+  "tech-crime-scene": "🔍",
+  "agentic-paradox": "🧠",
+  "code-combat": "⚔️",
+  "paper-presentation": "📄",
   "workshop": "🔧",
 };
 
@@ -68,9 +65,6 @@ const TRANSFORMER_NAMES: Record<string, string> = {
   "tech-auction": "Optimus Prime",
   "tech-crime-scene": "Soundwave",
   "agentic-paradox": "Megatron",
-  "prompt-to-product": "Bumblebee",
-  "ai-pitch": "Grimlock",
-  "vibecraft": "Windblade",
   "code-combat": "Ironhide",
   "paper-presentation": "Ratchet",
   "workshop": "Wheeljack",
