@@ -772,10 +772,10 @@ function TransformerHeroInner({ t }: TransformerHeroInnerProps) {
     >
       {/* 3D Canvas */}
       <Canvas
+        dpr={Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2)}
         gl={{
           antialias: true,
           alpha: true,
-          pixelRatio: Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2),
           powerPreference: "high-performance",
         }}
         shadows
