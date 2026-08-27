@@ -244,7 +244,7 @@ export default function Navbar() {
                               background: "rgba(0, 212, 255, 0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                               border: "1px solid rgba(0, 212, 255, 0.15)",
                             }}>
-                              {EVENT_ICONS[reg.event_slug] || "🎯"}
+                              {EVENT_ICONS[reg.event_slug]?.emoji || "🎯"}
                             </div>
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{ fontSize: "0.83rem", fontWeight: 700, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
