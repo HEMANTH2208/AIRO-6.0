@@ -3,6 +3,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
+import CybertronBackground from "@/components/CybertronBackground";
+import CybertronLoader from "@/components/CybertronLoader";
 
 export const metadata: Metadata = {
   title: "AIRO 6.0 — Sairam Engineering College",
@@ -24,6 +26,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
+        <CybertronLoader />
+        <CybertronBackground />
         <CustomCursor />
         <Navbar />
         <main className="page-wrapper">{children}</main>

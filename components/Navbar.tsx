@@ -28,17 +28,18 @@ const EVENT_ICONS: Record<string, string> = {
   "vibecraft": "🌿",
 };
 
-/* Inline Omnitrix hourglass SVG */
-function OmnitrixSymbol() {
+/* Inline Cybertron symbol SVG */
+function CybertronSymbol() {
   return (
-    <svg viewBox="0 0 24 24" width="18" height="18" style={{ marginRight: "6px", filter: "drop-shadow(0 0 4px rgba(57, 255, 20, 0.5))" }}>
+    <svg viewBox="0 0 24 24" width="18" height="18" style={{ marginRight: "6px", filter: "drop-shadow(0 0 4px rgba(0, 212, 255, 0.5))" }}>
       <polygon
-        points="4,3 20,3 14,12 20,21 4,21 10,12"
+        points="12,2 22,8 22,16 12,22 2,16 2,8"
         fill="none"
-        stroke="#39FF14"
+        stroke="#00d4ff"
         strokeWidth="1.8"
         strokeLinejoin="round"
       />
+      <circle cx="12" cy="12" r="4" fill="none" stroke="#ffaa00" strokeWidth="1.5" />
     </svg>
   );
 }
@@ -100,7 +101,7 @@ export default function Navbar() {
       <div className="container navbar-inner">
         <Link href="/" className="navbar-brand">
           <span className="brand-main" style={{ display: "flex", alignItems: "center" }}>
-            <OmnitrixSymbol />
+            <CybertronSymbol />
             AIRO 6.0
           </span>
           <span className="brand-sub">Sairam Engineering College</span>
@@ -186,14 +187,14 @@ export default function Navbar() {
                   <div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
                       <span style={{ fontSize: "0.7rem", fontWeight: 800, letterSpacing: "0.06em", color: "var(--primary)", textTransform: "uppercase", fontFamily: "var(--font-heading)" }}>
-                        Active Transformations
+                        Active Factions
                       </span>
                       <span style={{
                         fontSize: "0.66rem", fontWeight: 700, padding: "0.15rem 0.5rem", borderRadius: "999px",
-                        background: "rgba(57, 255, 20, 0.1)", color: "var(--primary)", border: "1px solid rgba(57, 255, 20, 0.3)",
+                        background: "rgba(0, 212, 255, 0.1)", color: "var(--primary)", border: "1px solid rgba(0, 212, 255, 0.3)",
                         fontFamily: "var(--font-heading)",
                       }}>
-                        {registrations.length} ALIEN{registrations.length !== 1 ? "S" : ""}
+                        {registrations.length} FACTION{registrations.length !== 1 ? "S" : ""}
                       </span>
                     </div>
 
@@ -218,7 +219,7 @@ export default function Navbar() {
                             onMouseEnter={(e) => {
                               e.currentTarget.style.borderColor = "var(--primary)";
                               e.currentTarget.style.transform = "translateX(3px)";
-                              e.currentTarget.style.boxShadow = "0 2px 10px rgba(57, 255, 20, 0.15)";
+                              e.currentTarget.style.boxShadow = "0 2px 10px rgba(0, 212, 255, 0.15)";
                             }}
                             onMouseLeave={(e) => {
                               e.currentTarget.style.borderColor = "var(--border)";
@@ -228,8 +229,8 @@ export default function Navbar() {
                           >
                             <div style={{
                               fontSize: "1.2rem", width: "30px", height: "30px", borderRadius: "6px",
-                              background: "rgba(57, 255, 20, 0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-                              border: "1px solid rgba(57, 255, 20, 0.15)",
+                              background: "rgba(0, 212, 255, 0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                              border: "1px solid rgba(0, 212, 255, 0.15)",
                             }}>
                               {EVENT_ICONS[reg.event_slug] || "🎯"}
                             </div>
@@ -274,7 +275,7 @@ export default function Navbar() {
           ) : (
             <Link href="/" className="btn btn-primary btn-sm" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <Zap size={16} />
-              Activate Omnitrix
+              Access Command Core
             </Link>
           )}
         </div>

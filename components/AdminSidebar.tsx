@@ -7,11 +7,11 @@ import { signOut } from "next-auth/react";
 const NAV = [
   { section: "Mission Control" },
   { href: "/admin/dashboard", icon: "📊", label: "Dashboard" },
-  { section: "Alien Registry" },
+  { section: "Cybertronian Registry" },
   { href: "/admin/events", icon: "⚡", label: "Events" },
   { href: "/admin/registrations", icon: "📋", label: "Registrations" },
   { href: "/admin/teams", icon: "👥", label: "Squads" },
-  { href: "/admin/participants", icon: "🦸", label: "Heroes" },
+  { href: "/admin/participants", icon: "🤖", label: "Transformers" },
   { section: "Field Ops" },
   { href: "/admin/qr-verify", icon: "🔍", label: "QR Scanner" },
   { href: "/admin/export", icon: "📥", label: "Data Extract" },
@@ -24,7 +24,7 @@ export default function AdminSidebar() {
     <aside className="admin-sidebar">
       <div className="admin-sidebar-logo">
         <div className="brand">AIRO 6.0</div>
-        <div className="sub">Plumber HQ</div>
+        <div className="sub">Cybertron HQ</div>
       </div>
 
       <ul className="sidebar-nav">

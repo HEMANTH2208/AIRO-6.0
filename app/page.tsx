@@ -53,21 +53,21 @@ interface User {
 }
 
 const EVENT_ICONS: Record<string, string> = {
-  "tech-auction": "💎",
-  "tech-crime-scene": "🧠",
-  "agentic-paradox": "⚡",
-  "prompt-to-product": "🏃",
-  "ai-pitch": "🔥",
-  "vibecraft": "🌿",
+  "tech-auction": "🤖",
+  "tech-crime-scene": "🔊",
+  "agentic-paradox": "🦾",
+  "prompt-to-product": "⚡",
+  "ai-pitch": "🦖",
+  "vibecraft": "⚔️",
 };
 
-const ALIEN_NAMES: Record<string, string> = {
-  "tech-auction": "Diamondhead",
-  "tech-crime-scene": "Grey Matter",
-  "agentic-paradox": "Upgrade",
-  "prompt-to-product": "XLR8",
-  "ai-pitch": "Heatblast",
-  "vibecraft": "Wildvine",
+const TRANSFORMER_NAMES: Record<string, string> = {
+  "tech-auction": "Optimus Prime",
+  "tech-crime-scene": "Soundwave",
+  "agentic-paradox": "Megatron",
+  "prompt-to-product": "Bumblebee",
+  "ai-pitch": "Grimlock",
+  "vibecraft": "Windblade",
 };
 
 export default function HomePage() {
@@ -213,7 +213,7 @@ export default function HomePage() {
     return (
       <div className="page-loading">
         <div className="page-loading-spinner" />
-        <p>Initializing Omnitrix...</p>
+        <p>Connecting to Cybertron Command...</p>
       </div>
     );
   }
@@ -224,27 +224,28 @@ export default function HomePage() {
       <div className="section" style={{ minHeight: "calc(100vh - var(--nav-height))", display: "flex", alignItems: "center" }}>
         <div className="container" style={{ maxWidth: "460px" }}>
           <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            {/* Omnitrix Hourglass */}
+            {/* Cybertron Core Symbol */}
             <div style={{ margin: "0 auto 1rem", width: "60px", height: "60px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg viewBox="0 0 40 40" width="50" height="50" style={{ filter: "drop-shadow(0 0 12px rgba(57, 255, 20, 0.5))" }}>
-                <circle cx="20" cy="20" r="18" fill="none" stroke="rgba(57, 255, 20, 0.3)" strokeWidth="1.5" />
-                <polygon points="10,8 30,8 22,20 30,32 10,32 18,20" fill="none" stroke="#39FF14" strokeWidth="2" strokeLinejoin="round" />
+              <svg viewBox="0 0 40 40" width="50" height="50" style={{ filter: "drop-shadow(0 0 12px rgba(0, 212, 255, 0.5))" }}>
+                <polygon points="20,3 37,12 37,28 20,37 3,28 3,12" fill="none" stroke="rgba(0, 212, 255, 0.3)" strokeWidth="1.5" />
+                <polygon points="20,3 37,12 37,28 20,37 3,28 3,12" fill="none" stroke="#00d4ff" strokeWidth="1.5" strokeDasharray="6 4" />
+                <circle cx="20" cy="20" r="5" fill="#ffaa00" opacity="0.9" />
               </svg>
             </div>
             <h1 style={{ fontSize: "2.2rem", fontWeight: 900, background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", marginBottom: "0.25rem", letterSpacing: "0.08em" }}>
               AIRO 6.0
             </h1>
             <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontFamily: "var(--font-heading)", letterSpacing: "0.04em" }}>
-              Omnitrix Calibration Required
+              CYBERTRON COMMAND — AUTHORIZATION REQUIRED
             </p>
           </div>
 
           <div className="card" style={{ padding: "2rem" }}>
             {isForgotPassword ? (
               <div>
-                <h3 style={{ fontSize: "1.3rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.5rem", fontFamily: "var(--font-heading)" }}>Reset Omnitrix Credentials</h3>
+                <h3 style={{ fontSize: "1.3rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.5rem", fontFamily: "var(--font-heading)" }}>Reset Command Credentials</h3>
                 <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginBottom: "1.5rem" }}>
-                  Enter your Plumber ID and new passcode to recalibrate access.
+                  Enter your Cybertron ID and a new access code to restore authorization.
                 </p>
 
                 {authError && <div className="alert alert-error" style={{ marginBottom: "1rem", fontSize: "0.85rem" }}>{authError}</div>}
@@ -390,7 +391,7 @@ export default function HomePage() {
   // 2. RENDER MAIN SYMPOSIUM CONTENT AND PROFILE IF LOGGED IN
   return (
     <>
-      {/* HERO — THE OMNITRIX AWAKENS */}
+      {/* HERO — CYBERTRON COMMAND ONLINE */}
       <section className="hero">
         <div className="hero-shapes">
           <div className="shape shape-1" />
@@ -398,13 +399,13 @@ export default function HomePage() {
           <div className="shape shape-3" />
         </div>
         <div className="container">
-          <motion.div 
+          <motion.div
             className="hero-content"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <motion.div 
+            <motion.div
               className="hero-badge"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -412,10 +413,10 @@ export default function HomePage() {
             >
               <span style={{ display: "flex", alignItems: "center" }}>
                 <Sparkles size={14} style={{ marginRight: "0.5rem" }} />
-                Omnitrix Online — Sairam Engineering College
+                CYBERTRON COMMAND ONLINE — Sairam Engineering College
               </span>
             </motion.div>
-            <motion.div 
+            <motion.div
               className="hero-title"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -424,19 +425,19 @@ export default function HomePage() {
               <div className="gradient-text">AIRO 6.0</div>
             </motion.div>
             <p style={{ fontSize: "0.95rem", color: "var(--text-muted)", marginBottom: "0.25rem", fontWeight: 700, fontFamily: "var(--font-heading)", letterSpacing: "0.04em" }}>
-              The Omnitrix Symposium · Dept. of AI & Data Science
+              TRANSFORM • INNOVATE • COMPETE · Dept. of AI &amp; Data Science
             </p>
-            <motion.p 
+            <motion.p
               className="hero-subtitle"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              Every hero needs a transformation. Choose your alien form, assemble your squad,
-              and compete in 6 epic challenges. The Omnitrix is fully charged.
-              Welcome, Hero <strong>{user.name}</strong>!
+              Command the battlefield. Choose your Cybertronian faction, assemble your squad,
+              and dominate 6 high-stakes challenges. Systems are fully online.
+              Welcome, Commander <strong>{user.name}</strong>!
             </motion.p>
-            <motion.div 
+            <motion.div
               className="hero-actions"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -447,12 +448,12 @@ export default function HomePage() {
                 Transform Now
               </Link>
               <Link href="/events" className="btn btn-secondary btn-xl" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                Alien Arsenal
+                Tactical Arsenal
                 <ArrowRight size={20} />
               </Link>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="hero-stats"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -460,11 +461,11 @@ export default function HomePage() {
             >
               <div className="hero-stat-item">
                 <div className="hero-stat-value">{events.length}</div>
-                <div className="hero-stat-label">Alien Forms</div>
+                <div className="hero-stat-label">Factions</div>
               </div>
               <div className="hero-stat-item">
                 <div className="hero-stat-value">{totalTeams > 0 ? totalTeams + "+" : "Open"}</div>
-                <div className="hero-stat-label">Heroes Registered</div>
+                <div className="hero-stat-label">Squads Registered</div>
               </div>
               <div className="hero-stat-item">
                 <div className="hero-stat-value">FREE</div>
@@ -479,8 +480,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* INFO BANNER — OMNITRIX STATUS */}
-      <div style={{ background: "rgba(57, 255, 20, 0.04)", borderTop: "1px solid rgba(57, 255, 20, 0.15)", borderBottom: "1px solid rgba(57, 255, 20, 0.15)", padding: "0.85rem 0" }}>
+      {/* INFO BANNER — CYBERTRON SYSTEM STATUS */}
+      <div style={{ background: "rgba(0, 212, 255, 0.04)", borderTop: "1px solid rgba(0, 212, 255, 0.15)", borderBottom: "1px solid rgba(0, 212, 255, 0.15)", padding: "0.85rem 0" }}>
         <div className="container" style={{ display: "flex", gap: "2rem", justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
           <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <Calendar size={16} />
@@ -516,11 +517,11 @@ export default function HomePage() {
           >
             <div className="section-label" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <Trophy size={14} />
-              Hero Registry
+              Cybertronian Registry
             </div>
-            <h2 className="section-title">Active Transformations</h2>
+            <h2 className="section-title">Registered Factions</h2>
             <p className="section-subtitle">
-              Your registered alien forms are listed below. Download your Omnitrix ID card to present at the mission briefing.
+              Your registered Cybertronian factions are listed below. Download your Cybertron ID pass to present at the mission briefing.
             </p>
           </motion.div>
 
@@ -535,7 +536,7 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1, duration: 0.5 }}
-                  whileHover={{ y: -5, boxShadow: "0 0 30px rgba(57, 255, 20, 0.2)" }}
+                  whileHover={{ y: -5, boxShadow: "0 0 30px rgba(0, 212, 255, 0.2)" }}
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", borderBottom: "1px solid var(--border)", paddingBottom: "0.75rem" }}>
                     <div>
@@ -579,7 +580,7 @@ export default function HomePage() {
                       onClick={() => handleDownloadPass(reg)}
                     >
                       <Download size={20} />
-                      Download Omnitrix ID
+                      Download Cybertron ID Pass
                     </motion.button>
                   </div>
                 </motion.div>
@@ -596,10 +597,10 @@ export default function HomePage() {
               <span style={{ fontSize: "2.5rem", display: "block", marginBottom: "0.5rem" }}>
                 <Zap size={40} style={{ display: "inline-block" }} />
               </span>
-              <p style={{ color: "var(--text-muted)" }}>No active transformations. Your Omnitrix awaits calibration.</p>
+              <p style={{ color: "var(--text-muted)" }}>No active registrations. Cybertron Command awaits your squad.</p>
               <Link href="/register" className="btn btn-primary btn-sm" style={{ marginTop: "1rem", display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
                 <Zap size={16} />
-                Choose Your Alien Form
+                Choose Your Faction
               </Link>
             </motion.div>
           )}
@@ -618,12 +619,12 @@ export default function HomePage() {
           >
             <div className="section-label" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <Zap size={14} />
-              Alien Arsenal
+              Tactical Arsenal
             </div>
-            <h2 className="section-title">Choose Your Transformation</h2>
+            <h2 className="section-title">Choose Your Faction</h2>
             <p className="section-subtitle">
-              Six alien forms, each with unique powers. Pick your transformation,
-              assemble your squad, and prove you&apos;re the ultimate hero.
+              Six Cybertronian factions, each with a unique mission profile. Pick your faction,
+              assemble your squad, and prove your dominance on the battlefield.
             </p>
           </motion.div>
 
@@ -690,14 +691,14 @@ export default function HomePage() {
               <Target size={14} />
               Protocol
             </div>
-            <h2 className="section-title">Omnitrix Calibration</h2>
+            <h2 className="section-title">Cybertron Protocol</h2>
           </motion.div>
           <div className="grid-4">
             {[
-              { step: "01", icon: Zap, title: "Choose Alien", desc: "Browse the arsenal and pick your transformation" },
-              { step: "02", icon: Users, title: "Form Squad", desc: "Assemble your team of heroes" },
-              { step: "03", icon: Globe, title: "Enter DNA", desc: "Input hero and squad information" },
-              { step: "04", icon: Rocket, title: "Activate", desc: "Receive your Omnitrix ID and QR code" },
+              { step: "01", icon: Zap, title: "Select Faction", desc: "Browse the tactical arsenal and choose your Cybertronian faction" },
+              { step: "02", icon: Users, title: "Assemble Squad", desc: "Form a team of Autobot or Decepticon allies" },
+              { step: "03", icon: Globe, title: "Input Alliance Data", desc: "Enter squad commander and member information" },
+              { step: "04", icon: Rocket, title: "Deploy", desc: "Receive your Cybertron ID and mission QR pass" },
             ].map((item, index) => {
               const IconComponent = item.icon;
               return (

@@ -1,64 +1,64 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
-/* ========== CSS VARIABLES — BEN 10 OMNITRIX THEME ========== */
+/* ========== CSS VARIABLES — TRANSFORMERS CYBERNETIC THEME ========== */
 :root {
-  /* Omnitrix Colors */
-  --primary: #39FF14;
-  --primary-dark: #00CC00;
-  --primary-light: #66FF33;
-  --secondary: #00D4FF;
-  --secondary-dark: #009AC7;
-  --accent: #FF6B00;
-  --accent-warm: #FFD700;
+  /* Cybernetic Colors */
+  --primary: #00d4ff;
+  --primary-dark: #008eb3;
+  --primary-light: #4df0ff;
+  --secondary: #0066ff;
+  --secondary-dark: #004dc2;
+  --accent: #ffaa00;
+  --accent-warm: #ffc857;
 
-  /* Alien Energy Colors */
-  --alien-diamondhead: #00D4FF;
-  --alien-greymatter: #9B59B6;
-  --alien-upgrade: #39FF14;
-  --alien-xlr8: #00BFFF;
-  --alien-heatblast: #FF6B00;
-  --alien-wildvine: #32CD32;
+  /* Cybertronian Energy Colors */
+  --faction-optimus: #0066ff;
+  --faction-megatron: #7a8a99;
+  --faction-bumblebee: #ffcc00;
+  --faction-soundwave: #00d4ff;
+  --faction-grimlock: #ff5500;
+  --faction-windblade: #ff1a40;
 
-  /* Backgrounds — Deep Space */
-  --bg-base: #0a0a0f;
-  --bg-surface: #0d1117;
-  --bg-card: #131a24;
-  --bg-elevated: #1a2332;
-  --bg-hover: #1f2d3d;
+  /* Backgrounds — Deep Mechanical Space */
+  --bg-base: #06080c;
+  --bg-surface: #0a0e14;
+  --bg-card: #0f1622;
+  --bg-elevated: #151f30;
+  --bg-hover: #1b283d;
 
   /* Text */
-  --text-primary: #e0f7e0;
-  --text-secondary: #8fb89f;
-  --text-muted: #4a7a5a;
+  --text-primary: #e6f7ff;
+  --text-secondary: #90afc5;
+  --text-muted: #4b6b88;
 
   /* Borders */
-  --border: #1a3a2a;
-  --border-light: #2a5a3a;
+  --border: #14293d;
+  --border-light: #1f3f5c;
 
   /* Status */
-  --success: #39FF14;
-  --success-bg: rgba(57, 255, 20, 0.08);
-  --warning: #FFD700;
-  --warning-bg: rgba(255, 215, 0, 0.08);
-  --error: #FF4444;
+  --success: #00ffaa;
+  --success-bg: rgba(0, 255, 170, 0.08);
+  --warning: #ffaa00;
+  --warning-bg: rgba(255, 170, 0, 0.08);
+  --error: #ff4444;
   --error-bg: rgba(255, 68, 68, 0.08);
-  --info: #00D4FF;
+  --info: #00d4ff;
   --info-bg: rgba(0, 212, 255, 0.08);
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #39FF14 0%, #00CC00 100%);
-  --gradient-hero: linear-gradient(135deg, #0a0a0f 0%, #0a1a0f 40%, #0d1a0a 70%, #0a0f1a 100%);
-  --gradient-card: linear-gradient(145deg, #131a24, #1a2332);
-  --gradient-accent: linear-gradient(135deg, #39FF14 0%, #00D4FF 100%);
-  --gradient-omnitrix: linear-gradient(135deg, #39FF14, #00FF00, #39FF14);
+  --gradient-primary: linear-gradient(135deg, #00d4ff 0%, #0066ff 100%);
+  --gradient-hero: linear-gradient(135deg, #06080c 0%, #08101a 40%, #0a1524 70%, #060c14 100%);
+  --gradient-card: linear-gradient(145deg, #0f1622, #151f30);
+  --gradient-accent: linear-gradient(135deg, #00d4ff 0%, #ffaa00 100%);
+  --gradient-cybertron: linear-gradient(135deg, #00d4ff, #0066ff, #00d4ff);
 
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 0 30px rgba(57, 255, 20, 0.25);
-  --shadow-glow-green: 0 0 30px rgba(57, 255, 20, 0.4);
-  --shadow-glow-blue: 0 0 30px rgba(0, 212, 255, 0.3);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.8);
+  --shadow-glow: 0 0 30px rgba(0, 212, 255, 0.2);
+  --shadow-glow-green: 0 0 30px rgba(0, 212, 255, 0.35);
+  --shadow-glow-blue: 0 0 30px rgba(0, 102, 255, 0.25);
 
   /* Spacing */
   --max-width: 1200px;
@@ -69,15 +69,15 @@
   --font-heading: 'Orbitron', 'Rajdhani', sans-serif;
 
   /* Border Radius */
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
+  --radius-sm: 4px; /* More mechanical / boxy corners */
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
   --radius-full: 9999px;
 
   /* Transitions */
-  --transition: all 0.2s ease;
-  --transition-slow: all 0.35s ease;
+  --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ========== RESET ========== */
@@ -103,8 +103,8 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(57, 255, 20, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(57, 255, 20, 0.02) 1px, transparent 1px);
+    linear-gradient(rgba(0, 212, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.02) 1px, transparent 1px);
   background-size: 60px 60px;
   pointer-events: none;
   z-index: 0;
@@ -142,7 +142,7 @@ p { color: var(--text-secondary); }
 .section { padding: 5rem 0; }
 .section-sm { padding: 3rem 0; }
 
-/* ========== NAVBAR — OMNITRIX CONTROL BAR ========== */
+/* ========== NAVBAR — CYBERTRON COMMAND BAR ========== */
 .navbar {
   position: fixed;
   top: 0;
@@ -157,7 +157,7 @@ p { color: var(--text-secondary); }
   transition: var(--transition);
 }
 
-/* Omnitrix green energy line on top */
+/* Cybertron green energy line on top */
 .navbar::before {
   content: '';
   position: absolute;
@@ -166,7 +166,7 @@ p { color: var(--text-secondary); }
   right: 0;
   height: 2px;
   background: var(--gradient-primary);
-  box-shadow: 0 0 10px rgba(57, 255, 20, 0.5), 0 0 20px rgba(57, 255, 20, 0.2);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5), 0 0 20px rgba(0, 212, 255, 0.2);
 }
 
 .navbar-inner {
@@ -217,8 +217,8 @@ p { color: var(--text-secondary); }
   letter-spacing: 0.02em;
 }
 
-.nav-links a:hover { color: var(--primary); background: rgba(57, 255, 20, 0.06); }
-.nav-links a.active { color: var(--primary); background: rgba(57, 255, 20, 0.1); }
+.nav-links a:hover { color: var(--primary); background: rgba(0, 212, 255, 0.06); }
+.nav-links a.active { color: var(--primary); background: rgba(0, 212, 255, 0.1); }
 
 /* Green energy underline */
 .nav-links a::after {
@@ -231,7 +231,7 @@ p { color: var(--text-secondary); }
   background: var(--gradient-primary);
   border-radius: 2px;
   transition: width 0.25s ease;
-  box-shadow: 0 0 6px rgba(57, 255, 20, 0.5);
+  box-shadow: 0 0 6px rgba(0, 212, 255, 0.5);
 }
 .nav-links a:hover::after,
 .nav-links a.active::after {
@@ -261,7 +261,7 @@ p { color: var(--text-secondary); }
   background: var(--primary);
   border-radius: 2px;
   transition: var(--transition);
-  box-shadow: 0 0 4px rgba(57, 255, 20, 0.4);
+  box-shadow: 0 0 4px rgba(0, 212, 255, 0.4);
 }
 
 /* ========== BUTTONS ========== */
@@ -287,11 +287,11 @@ p { color: var(--text-secondary); }
 .btn-primary {
   background: var(--gradient-primary);
   color: #000;
-  box-shadow: 0 4px 15px rgba(57, 255, 20, 0.35);
+  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.35);
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(57, 255, 20, 0.5), 0 0 40px rgba(57, 255, 20, 0.15);
+  box-shadow: 0 6px 25px rgba(0, 212, 255, 0.5), 0 0 40px rgba(0, 212, 255, 0.15);
 }
 
 .btn-secondary {
@@ -300,15 +300,15 @@ p { color: var(--text-secondary); }
   border: 1px solid var(--border-light);
 }
 .btn-secondary:hover {
-  background: rgba(57, 255, 20, 0.06);
+  background: rgba(0, 212, 255, 0.06);
   border-color: var(--primary);
-  box-shadow: 0 0 15px rgba(57, 255, 20, 0.1);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
 }
 
 .btn-success {
-  background: linear-gradient(135deg, #39FF14, #00CC00);
+  background: linear-gradient(135deg, #00d4ff, #008eb3);
   color: #000;
-  box-shadow: 0 4px 15px rgba(57, 255, 20, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
 }
 .btn-success:hover { transform: translateY(-2px); }
 
@@ -323,7 +323,7 @@ p { color: var(--text-secondary); }
   border: 1.5px solid var(--primary);
   color: var(--primary);
 }
-.btn-outline:hover { background: rgba(57, 255, 20, 0.08); box-shadow: 0 0 15px rgba(57, 255, 20, 0.15); }
+.btn-outline:hover { background: rgba(0, 212, 255, 0.08); box-shadow: 0 0 15px rgba(0, 212, 255, 0.15); }
 
 .btn-sm { padding: 0.4rem 1rem; font-size: 0.75rem; }
 .btn-xs { padding: 0.3rem 0.75rem; font-size: 0.7rem; }
@@ -347,9 +347,9 @@ p { color: var(--text-secondary); }
 }
 
 .card:hover {
-  border-color: rgba(57, 255, 20, 0.3);
+  border-color: rgba(0, 212, 255, 0.3);
   transform: translateY(-3px);
-  box-shadow: 0 0 25px rgba(57, 255, 20, 0.1), var(--shadow-md);
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.1), var(--shadow-md);
 }
 
 .card-header {
@@ -361,7 +361,7 @@ p { color: var(--text-secondary); }
 .card-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading); letter-spacing: 0.02em; }
 .card-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem; }
 
-/* ========== FORMS — OMNITRIX INTERFACE ========== */
+/* ========== FORMS — CYBERTRON INTERFACE ========== */
 .form-group { margin-bottom: 1.25rem; }
 
 .form-label {
@@ -393,7 +393,7 @@ p { color: var(--text-secondary); }
   outline: none;
   border-color: var(--primary);
   background: var(--bg-card);
-  box-shadow: 0 0 0 3px rgba(57, 255, 20, 0.12), 0 0 15px rgba(57, 255, 20, 0.08);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.12), 0 0 15px rgba(0, 212, 255, 0.08);
 }
 
 .form-control::placeholder { color: var(--text-muted); }
@@ -446,7 +446,7 @@ td {
   vertical-align: middle;
 }
 
-tbody tr:hover { background: rgba(57, 255, 20, 0.03); }
+tbody tr:hover { background: rgba(0, 212, 255, 0.03); }
 tbody tr:last-child td { border-bottom: none; }
 
 /* ========== BADGES ========== */
@@ -463,11 +463,11 @@ tbody tr:last-child td { border-bottom: none; }
   font-family: var(--font-heading);
 }
 
-.badge-success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(57, 255, 20, 0.3); }
+.badge-success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(0, 212, 255, 0.3); }
 .badge-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(255, 215, 0, 0.3); }
 .badge-error { background: var(--error-bg); color: var(--error); border: 1px solid rgba(255, 68, 68, 0.3); }
 .badge-info { background: var(--info-bg); color: var(--info); border: 1px solid rgba(0, 212, 255, 0.3); }
-.badge-primary { background: rgba(57, 255, 20, 0.1); color: var(--primary); border: 1px solid rgba(57, 255, 20, 0.3); }
+.badge-primary { background: rgba(0, 212, 255, 0.1); color: var(--primary); border: 1px solid rgba(0, 212, 255, 0.3); }
 
 /* ========== STAT CARDS ========== */
 .stat-card {
@@ -487,11 +487,11 @@ tbody tr:last-child td { border-bottom: none; }
   right: 0;
   height: 3px;
   background: var(--gradient-primary);
-  box-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
 }
 
 .stat-icon { font-size: 2rem; margin-bottom: 1rem; }
-.stat-value { font-size: 2.5rem; font-weight: 900; font-family: var(--font-heading); color: var(--primary); line-height: 1; text-shadow: 0 0 20px rgba(57, 255, 20, 0.3); }
+.stat-value { font-size: 2.5rem; font-weight: 900; font-family: var(--font-heading); color: var(--primary); line-height: 1; text-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
 .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem; font-family: var(--font-heading); letter-spacing: 0.04em; text-transform: uppercase; }
 
 /* ========== ALERTS ========== */
@@ -505,12 +505,12 @@ tbody tr:last-child td { border-bottom: none; }
   margin-bottom: 1rem;
 }
 
-.alert-success { background: var(--success-bg); border: 1px solid rgba(57, 255, 20, 0.3); color: var(--success); }
+.alert-success { background: var(--success-bg); border: 1px solid rgba(0, 212, 255, 0.3); color: var(--success); }
 .alert-error { background: var(--error-bg); border: 1px solid rgba(255, 68, 68, 0.3); color: var(--error); }
 .alert-warning { background: var(--warning-bg); border: 1px solid rgba(255, 215, 0, 0.3); color: var(--warning); }
 .alert-info { background: var(--info-bg); border: 1px solid rgba(0, 212, 255, 0.3); color: var(--info); }
 
-/* ========== HERO — THE OMNITRIX AWAKENS ========== */
+/* ========== HERO — CYBERTRON COMMAND ONLINE ========== */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -525,9 +525,9 @@ tbody tr:last-child td { border-bottom: none; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(57, 255, 20, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 60%),
     radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 60% 80%, rgba(57, 255, 20, 0.04) 0%, transparent 50%);
+    radial-gradient(ellipse at 60% 80%, rgba(0, 212, 255, 0.04) 0%, transparent 50%);
 }
 
 /* Circuit-board overlay on hero */
@@ -536,8 +536,8 @@ tbody tr:last-child td { border-bottom: none; }
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(57, 255, 20, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(57, 255, 20, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
   background-size: 40px 40px;
   pointer-events: none;
 }
@@ -547,8 +547,8 @@ tbody tr:last-child td { border-bottom: none; }
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(57, 255, 20, 0.1);
-  border: 1px solid rgba(57, 255, 20, 0.3);
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   border-radius: var(--radius-full);
   padding: 0.4rem 1rem;
   font-size: 0.78rem;
@@ -558,7 +558,7 @@ tbody tr:last-child td { border-bottom: none; }
   font-family: var(--font-heading);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  animation: omnitrixPulse 3s ease-in-out infinite;
+  animation: cybertronPulse 3s ease-in-out infinite;
 }
 
 .hero-title { font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 900; line-height: 1; margin-bottom: 0.25rem; }
@@ -567,15 +567,15 @@ tbody tr:last-child td { border-bottom: none; }
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 30px rgba(57, 255, 20, 0.3));
+  filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.3));
 }
 .hero-subtitle { font-size: clamp(1rem, 2.5vw, 1.3rem); color: var(--text-secondary); margin: 1rem 0 2rem; max-width: 600px; }
 .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
 .hero-stats { display: flex; gap: 2.5rem; margin-top: 3rem; flex-wrap: wrap; }
-.hero-stat-item .hero-stat-value { font-size: 2rem; font-weight: 900; color: var(--primary); font-family: var(--font-heading); text-shadow: 0 0 15px rgba(57, 255, 20, 0.3); }
+.hero-stat-item .hero-stat-value { font-size: 2rem; font-weight: 900; color: var(--primary); font-family: var(--font-heading); text-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
 .hero-stat-item .hero-stat-label { font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-heading); letter-spacing: 0.06em; text-transform: uppercase; }
 
-/* Floating shapes — Alien energy orbs */
+/* Floating shapes — Cybernetic energy orbs */
 .hero-shapes { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .shape {
   position: absolute;
@@ -583,11 +583,11 @@ tbody tr:last-child td { border-bottom: none; }
   opacity: 0.06;
   animation: float 8s ease-in-out infinite;
 }
-.shape-1 { width: 500px; height: 500px; background: var(--primary); top: -100px; right: -100px; animation-delay: 0s; box-shadow: 0 0 60px rgba(57, 255, 20, 0.2); }
+.shape-1 { width: 500px; height: 500px; background: var(--primary); top: -100px; right: -100px; animation-delay: 0s; box-shadow: 0 0 60px rgba(0, 212, 255, 0.2); }
 .shape-2 { width: 300px; height: 300px; background: var(--secondary); bottom: -50px; left: 10%; animation-delay: -3s; box-shadow: 0 0 40px rgba(0, 212, 255, 0.2); }
 .shape-3 { width: 200px; height: 200px; background: var(--primary); top: 40%; right: 20%; animation-delay: -6s; }
 
-/* ========== EVENT CARDS — ALIEN TRANSFORMATION ========== */
+/* ========== EVENT CARDS — CYBERTRONIAN FACTION ========== */
 .event-card {
   background: var(--gradient-card);
   border: 1px solid var(--border);
@@ -612,14 +612,14 @@ tbody tr:last-child td { border-bottom: none; }
   background: var(--gradient-primary);
   transform: scaleX(0);
   transition: transform 0.3s ease;
-  box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 }
 
 .event-card:hover::before { transform: scaleX(1); }
 .event-card:hover {
-  border-color: rgba(57, 255, 20, 0.4);
+  border-color: rgba(0, 212, 255, 0.4);
   transform: translateY(-5px);
-  box-shadow: 0 0 30px rgba(57, 255, 20, 0.15), 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.15), 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .event-icon { font-size: 2.5rem; margin-bottom: 1rem; }
@@ -632,10 +632,10 @@ tbody tr:last-child td { border-bottom: none; }
   gap: 0.35rem;
   font-size: 0.78rem;
   color: var(--text-muted);
-  background: rgba(57, 255, 20, 0.05);
+  background: rgba(0, 212, 255, 0.05);
   padding: 0.25rem 0.65rem;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(57, 255, 20, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.1);
 }
 .event-free-badge {
   display: inline-flex;
@@ -646,13 +646,13 @@ tbody tr:last-child td { border-bottom: none; }
   border-radius: var(--radius-full);
   font-size: 0.7rem;
   font-weight: 700;
-  border: 1px solid rgba(57, 255, 20, 0.3);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   font-family: var(--font-heading);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-/* ========== QR PASS — OMNITRIX ID CARD ========== */
+/* ========== QR PASS — CYBERTRON ID CARD ========== */
 .qr-pass {
   background: var(--gradient-card);
   border: 2px solid var(--primary);
@@ -672,7 +672,7 @@ tbody tr:last-child td { border-bottom: none; }
   top: 0; left: 0; right: 0;
   height: 4px;
   background: var(--gradient-primary);
-  box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
 }
 
 /* Circuit pattern overlay */
@@ -681,8 +681,8 @@ tbody tr:last-child td { border-bottom: none; }
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(57, 255, 20, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(57, 255, 20, 0.02) 1px, transparent 1px);
+    linear-gradient(rgba(0, 212, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.02) 1px, transparent 1px);
   background-size: 20px 20px;
   pointer-events: none;
   border-radius: inherit;
@@ -725,8 +725,8 @@ tbody tr:last-child td { border-bottom: none; }
 .qr-reg-id {
   text-align: center;
   padding: 0.75rem;
-  background: rgba(57, 255, 20, 0.08);
-  border: 1px solid rgba(57, 255, 20, 0.3);
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
   font-weight: 800;
@@ -738,7 +738,7 @@ tbody tr:last-child td { border-bottom: none; }
   z-index: 1;
 }
 
-/* ========== ADMIN SIDEBAR — PLUMBER HQ ========== */
+/* ========== ADMIN SIDEBAR — COMMAND HQ ========== */
 .admin-layout {
   display: flex;
   min-height: 100vh;
@@ -768,7 +768,7 @@ tbody tr:last-child td { border-bottom: none; }
   bottom: 0;
   width: 2px;
   background: var(--gradient-primary);
-  box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
 }
 
 .admin-sidebar-logo {
@@ -814,8 +814,8 @@ tbody tr:last-child td { border-bottom: none; }
   margin-bottom: 2px;
 }
 
-.sidebar-nav a:hover { color: var(--primary); background: rgba(57, 255, 20, 0.06); }
-.sidebar-nav a.active { color: var(--primary); background: rgba(57, 255, 20, 0.1); box-shadow: inset 2px 0 0 var(--primary); }
+.sidebar-nav a:hover { color: var(--primary); background: rgba(0, 212, 255, 0.06); }
+.sidebar-nav a.active { color: var(--primary); background: rgba(0, 212, 255, 0.1); box-shadow: inset 2px 0 0 var(--primary); }
 .sidebar-nav .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
 
 .admin-main {
@@ -850,7 +850,7 @@ tbody tr:last-child td { border-bottom: none; }
 .filter-bar .form-group { margin-bottom: 0; }
 .filter-bar .form-control { min-width: 160px; }
 
-/* ========== STEPS — OMNITRIX CALIBRATION ========== */
+/* ========== STEPS — CYBERTRON PROTOCOL ========== */
 .steps {
   display: flex;
   gap: 0;
@@ -898,8 +898,8 @@ tbody tr:last-child td { border-bottom: none; }
   border-color: var(--primary);
   background: var(--primary);
   color: #000;
-  box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
-  animation: omnitrixPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+  animation: cybertronPulse 2s ease-in-out infinite;
 }
 
 .step.done .step-circle {
@@ -960,7 +960,7 @@ tbody tr:last-child td { border-bottom: none; }
   padding: 2rem;
   max-width: 500px;
   width: 100%;
-  box-shadow: 0 0 30px rgba(57, 255, 20, 0.1), var(--shadow-lg);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.1), var(--shadow-lg);
   animation: modalIn 0.2s ease;
 }
 
@@ -974,7 +974,7 @@ tbody tr:last-child td { border-bottom: none; }
 .modal-close { color: var(--text-muted); font-size: 1.25rem; background: none; border: none; cursor: pointer; padding: 4px; }
 .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; }
 
-/* ========== LOADING — OMNITRIX BOOT ========== */
+/* ========== LOADING — CYBERTRON BOOT ========== */
 .loading-spinner {
   display: inline-block;
   width: 20px;
@@ -1001,7 +1001,7 @@ tbody tr:last-child td { border-bottom: none; }
   border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
 }
 
 .page-loading p {
@@ -1012,7 +1012,7 @@ tbody tr:last-child td { border-bottom: none; }
   font-size: 0.85rem;
 }
 
-/* ========== FOOTER — PLUMBER HQ ========== */
+/* ========== FOOTER — COMMAND HQ ========== */
 .footer {
   background: var(--bg-surface);
   border-top: 1px solid var(--border);
@@ -1029,7 +1029,7 @@ tbody tr:last-child td { border-bottom: none; }
   right: 0;
   height: 1px;
   background: var(--gradient-primary);
-  box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
 }
 
 .footer-grid {
@@ -1055,7 +1055,7 @@ tbody tr:last-child td { border-bottom: none; }
 
 .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
 .footer-links a { font-size: 0.85rem; color: var(--text-muted); transition: var(--transition); }
-.footer-links a:hover { color: var(--primary); text-shadow: 0 0 8px rgba(57, 255, 20, 0.3); }
+.footer-links a:hover { color: var(--primary); text-shadow: 0 0 8px rgba(0, 212, 255, 0.3); }
 
 .footer-bottom {
   padding-top: 1.5rem;
@@ -1073,8 +1073,8 @@ tbody tr:last-child td { border-bottom: none; }
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(57, 255, 20, 0.08);
-  border: 1px solid rgba(57, 255, 20, 0.25);
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.25);
   border-radius: var(--radius-full);
   padding: 0.3rem 0.9rem;
   font-size: 0.73rem;
@@ -1240,7 +1240,7 @@ tbody tr:last-child td { border-bottom: none; }
   font-size: 2rem;
   margin: 0 auto 1.5rem;
   animation: successPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
 }
 
 @keyframes successPop {
@@ -1256,7 +1256,7 @@ tbody tr:last-child td { border-bottom: none; }
   margin-top: 1.5rem;
 }
 
-.checkin-result.success { background: var(--success-bg); border: 1px solid rgba(57, 255, 20, 0.3); }
+.checkin-result.success { background: var(--success-bg); border: 1px solid rgba(0, 212, 255, 0.3); }
 .checkin-result.already { background: var(--warning-bg); border: 1px solid rgba(255, 215, 0, 0.3); }
 .checkin-result.error { background: var(--error-bg); border: 1px solid rgba(255, 68, 68, 0.3); }
 
@@ -1287,7 +1287,7 @@ tbody tr:last-child td { border-bottom: none; }
     max-width: 420px !important;
     margin: 0 auto !important;
     padding: 2rem !important;
-    border: 2px solid #39FF14 !important;
+    border: 2px solid #00d4ff !important;
     background: #ffffff !important;
     color: #1a1a2e !important;
     box-shadow: none !important;
@@ -1296,7 +1296,7 @@ tbody tr:last-child td { border-bottom: none; }
   }
 
   .qr-pass-logo {
-    color: #39FF14 !important;
+    color: #00d4ff !important;
     background: none !important;
     -webkit-text-fill-color: initial !important;
   }
@@ -1307,9 +1307,9 @@ tbody tr:last-child td { border-bottom: none; }
   }
 
   .qr-reg-id {
-    background: rgba(57, 255, 20, 0.08) !important;
-    color: #39FF14 !important;
-    border: 1px solid rgba(57, 255, 20, 0.25) !important;
+    background: rgba(0, 212, 255, 0.08) !important;
+    color: #00d4ff !important;
+    border: 1px solid rgba(0, 212, 255, 0.25) !important;
   }
 
   .qr-pass-label {
@@ -1326,13 +1326,13 @@ tbody tr:last-child td { border-bottom: none; }
   }
 }
 
-/* ========== OMNITRIX ANIMATIONS ========== */
-@keyframes omnitrixPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0); }
-  50%       { box-shadow: 0 0 15px 5px rgba(57, 255, 20, 0.25); }
+/* ========== CYBERTRON ANIMATIONS ========== */
+@keyframes cybertronPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
+  50%       { box-shadow: 0 0 15px 5px rgba(0, 212, 255, 0.25); }
 }
 
-@keyframes omnitrixSpin {
+@keyframes cybertronSpin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
@@ -1352,7 +1352,7 @@ tbody tr:last-child td { border-bottom: none; }
   100% { background-position: 150% 150%; }
 }
 
-@keyframes alienMaterialize {
+@keyframes cyberneticMaterialize {
   0%   { opacity: 0; transform: scale(0.8); filter: brightness(3) hue-rotate(60deg); }
   50%  { opacity: 1; filter: brightness(1.5) hue-rotate(30deg); }
   100% { opacity: 1; transform: scale(1); filter: brightness(1) hue-rotate(0deg); }
@@ -1369,8 +1369,8 @@ tbody tr:last-child td { border-bottom: none; }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(57, 255, 20, 0); }
-  50%       { box-shadow: 0 0 12px 3px rgba(57, 255, 20, 0.25); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
+  50%       { box-shadow: 0 0 12px 3px rgba(0, 212, 255, 0.25); }
 }
 
 @keyframes shimmer {
@@ -1388,9 +1388,9 @@ tbody tr:last-child td { border-bottom: none; }
 }
 
 @keyframes energyBorder {
-  0%   { border-color: rgba(57, 255, 20, 0.2); }
-  50%  { border-color: rgba(57, 255, 20, 0.6); }
-  100% { border-color: rgba(57, 255, 20, 0.2); }
+  0%   { border-color: rgba(0, 212, 255, 0.2); }
+  50%  { border-color: rgba(0, 212, 255, 0.6); }
+  100% { border-color: rgba(0, 212, 255, 0.2); }
 }
 
 .fade-in {
@@ -1421,8 +1421,8 @@ tbody tr:last-child td { border-bottom: none; }
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--primary);
-  background: rgba(57, 255, 20, 0.08);
-  border: 1px solid rgba(57, 255, 20, 0.25);
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.25);
   border-radius: 999px;
   padding: 0.25rem 0.75rem;
   margin-bottom: 0.6rem;
@@ -1469,7 +1469,7 @@ tbody tr:last-child td { border-bottom: none; }
   border-color: var(--primary);
   color: #000;
   font-weight: 700;
-  box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
 }
 
 /* Main registration grid */
@@ -1506,7 +1506,7 @@ tbody tr:last-child td { border-bottom: none; }
 }
 .reg-status-bar.checked {
   background: var(--success-bg);
-  border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
   color: var(--success);
 }
 .reg-status-bar.pending {
@@ -1536,7 +1536,7 @@ tbody tr:last-child td { border-bottom: none; }
   transition: background 0.15s ease;
 }
 .reg-info-item:hover {
-  background: rgba(57, 255, 20, 0.03);
+  background: rgba(0, 212, 255, 0.03);
 }
 .reg-info-item:nth-child(even) {
   border-right: none;
@@ -1580,7 +1580,7 @@ tbody tr:last-child td { border-bottom: none; }
   letter-spacing: 0.02em;
 }
 .expand-toggle:hover {
-  background: rgba(57, 255, 20, 0.04);
+  background: rgba(0, 212, 255, 0.04);
 }
 
 /* Team details */
@@ -1647,8 +1647,8 @@ tbody tr:last-child td { border-bottom: none; }
   font-size: 0.9rem;
 }
 
-/* ========== OMNITRIX HOURGLASS — INLINE SVG HELPER ========== */
-.omnitrix-hourglass {
+/* ========== CYBERTRON HEX — INLINE SVG HELPER ========== */
+.cybertron-hourglass {
   display: inline-block;
   width: 1em;
   height: 1em;
