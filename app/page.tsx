@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { downloadQRCard } from "@/lib/clientDownload";
 import { motion } from "framer-motion";
+import TransformerHeroFallback from "@/components/TransformerHeroFallback";
 import { 
   Zap, 
   Calendar, 
@@ -19,6 +21,29 @@ import {
   Globe,
   Clock
 } from "lucide-react";
+
+// Lazy-load the heavy 3D scene — doesn't block initial paint
+const TransformerHero = dynamic(() => import("@/components/TransformerHero"), {
+  ssr: false,
+  loading: () => <TransformerHeroFallback />,
+});
+
+// Detect if we should use the lightweight fallback
+function shouldUseFallback(): boolean {
+  if (typeof window === "undefined") return true;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
+  if (navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency <= 2) return true;
+  // Check for WebGL support
+  try {
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    if (!gl) return true;
+  } catch {
+    return true;
+  }
+  return false;
+}
+
 
 interface Event {
   id: number;
@@ -77,6 +102,7 @@ export default function HomePage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [totalTeams, setTotalTeams] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [useFallback, setUseFallback] = useState(true); // default true (SSR safe)
 
   // Auth Form States
   const [isLoginTab, setIsLoginTab] = useState(true);
@@ -121,6 +147,8 @@ export default function HomePage() {
       setEmail(remembered);
       setRememberMe(true);
     }
+    // Resolve fallback detection after mount (client-only)
+    setUseFallback(shouldUseFallback());
   }, []);
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
@@ -211,18 +239,31 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="page-loading">
-        <div className="page-loading-spinner" />
-        <p>Connecting to Cybertron Command...</p>
-      </div>
+      <>
+        {/* Show hero even during loading */}
+        {useFallback ? <TransformerHeroFallback /> : <TransformerHero />}
+        <div className="page-loading" style={{ minHeight: "30vh" }}>
+          <div className="page-loading-spinner" />
+          <p>Connecting to Cybertron Command...</p>
+        </div>
+      </>
     );
   }
 
   // 1. RENDER LOGIN/SIGNUP GATE IF NOT LOGGED IN
   if (!user) {
     return (
-      <div className="section" style={{ minHeight: "calc(100vh - var(--nav-height))", display: "flex", alignItems: "center" }}>
-        <div className="container" style={{ maxWidth: "460px" }}>
+      <>
+        {/* 3D Hero — visible to all visitors */}
+        {useFallback ? <TransformerHeroFallback /> : <TransformerHero />}
+
+        {/* Auth gate below the hero */}
+        <div
+          id="auth-gate"
+          className="section"
+          style={{ minHeight: "60vh", display: "flex", alignItems: "center" }}
+        >
+          <div className="container" style={{ maxWidth: "460px" }}>
           <div style={{ textAlign: "center", marginBottom: "2rem" }}>
             {/* Cybertron Core Symbol */}
             <div style={{ margin: "0 auto 1rem", width: "60px", height: "60px", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -384,15 +425,19 @@ export default function HomePage() {
             )}
           </div>
         </div>
-      </div>
+        </div>
+      </>
     );
   }
 
   // 2. RENDER MAIN SYMPOSIUM CONTENT AND PROFILE IF LOGGED IN
   return (
     <>
-      {/* HERO — CYBERTRON COMMAND ONLINE */}
-      <section className="hero">
+      {/* 3D TRANSFORMER HERO — visible to logged-in users too */}
+      {useFallback ? <TransformerHeroFallback /> : <TransformerHero />}
+
+      {/* HERO BAND — compact welcome strip post-animation */}
+      <section className="hero" style={{ paddingTop: "3rem", paddingBottom: "2rem", minHeight: "auto" }}>
         <div className="hero-shapes">
           <div className="shape shape-1" />
           <div className="shape shape-2" />
