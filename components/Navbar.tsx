@@ -268,7 +268,8 @@ export default function Navbar() {
                     </button>
                   </div>
                 </motion.div>
-              )}
+                )}
+              </AnimatePresence>
             </div>
           ) : (
             <Link href="/" className="btn btn-primary btn-sm" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
