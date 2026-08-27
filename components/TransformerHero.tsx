@@ -276,57 +276,126 @@ function TransformPart({ def, t, name }: { def: PartDef; t: number; name: string
   return <mesh ref={meshRef} geometry={geo} material={mat} castShadow receiveShadow />;
 }
 
-// ─── Spark particles ──────────────────────────────────────────────────────────
+// ─── Holographic 3D Rotating Target Rings ──────────────────────────────────────
 
-const SPARK_COUNT = 80;
+function HoloTargetRings({ t }: { t: number }) {
+  const ring1Ref = useRef<THREE.Mesh>(null);
+  const ring2Ref = useRef<THREE.Mesh>(null);
+
+  const mat1 = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        color: new THREE.Color("#00ffaa"),
+        wireframe: true,
+        transparent: true,
+        opacity: 0.35,
+      }),
+    [],
+  );
+
+  const mat2 = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        color: new THREE.Color("#ffaa00"),
+        wireframe: true,
+        transparent: true,
+        opacity: 0.25,
+      }),
+    [],
+  );
+
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime();
+    if (ring1Ref.current) {
+      ring1Ref.current.rotation.z = time * 0.8;
+      ring1Ref.current.rotation.x = Math.PI / 2 + Math.sin(time * 0.5) * 0.1;
+      mat1.opacity = lerp(0.1, 0.45, t);
+    }
+    if (ring2Ref.current) {
+      ring2Ref.current.rotation.z = -time * 0.6;
+      ring2Ref.current.rotation.x = Math.PI / 2 + Math.cos(time * 0.5) * 0.1;
+      mat2.opacity = lerp(0.05, 0.35, t);
+    }
+  });
+
+  return (
+    <group position={[0, lerp(-0.2, 0.4, t), 0]}>
+      {/* Outer Chest Target Ring */}
+      <mesh ref={ring1Ref} material={mat1}>
+        <ringGeometry args={[1.8, 2.0, 32]} />
+      </mesh>
+      {/* Inner Energy Target Ring */}
+      <mesh ref={ring2Ref} material={mat2}>
+        <ringGeometry args={[1.2, 1.35, 24]} />
+      </mesh>
+    </group>
+  );
+}
+
+// ─── Helical Spark Energy Vortex ──────────────────────────────────────────────
+
+const SPARK_COUNT = 200; // Increased from 120
 
 function Sparks({ t }: { t: number }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
 
   const positions = useMemo(() => {
     return Array.from({ length: SPARK_COUNT }, () => ({
-      x: (Math.random() - 0.5) * 5,
-      y: (Math.random() - 0.5) * 5,
-      z: (Math.random() - 0.5) * 3,
-      seed: Math.random(),
+      radius: 1.5 + Math.random() * 3.5, // Wider spread
+      angle: Math.random() * Math.PI * 2,
+      height: (Math.random() - 0.5) * 6, // Taller spread
+      speed: 0.3 + Math.random() * 1.2,
+      size: 0.05 + Math.random() * 0.1, // Larger sparks
+      colorIndex: Math.floor(Math.random() * 4), // 4 color options
     }));
   }, []);
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
+  
+  // Create vibrant glowing material
   const mat = useMemo(
     () =>
       new THREE.MeshBasicMaterial({
-        color: new THREE.Color("#00d4ff"),
+        color: new THREE.Color("#00ffaa"),
         transparent: true,
-        opacity: 0.0,
+        opacity: 0.9,
       }),
     [],
   );
+
+  // Color palette for particles
+  const colors = useMemo(() => [
+    new THREE.Color("#00ffaa"), // Neon green
+    new THREE.Color("#00f0ff"), // Energon cyan
+    new THREE.Color("#fbbf24"), // Golden yellow
+    new THREE.Color("#ff2244"), // Crimson red
+  ], []);
 
   useFrame(({ clock }) => {
     const mesh = meshRef.current;
     if (!mesh) return;
 
-    // Active window: t ∈ [0.3, 0.85]
-    const active = t >= 0.3 && t <= 0.85;
-    const intensity = active
-      ? Math.sin(Math.max(0, Math.min(1, (t - 0.3) / 0.55)) * Math.PI)
-      : 0;
-    mat.opacity = intensity * 0.7;
-
     const time = clock.getElapsedTime();
+    mat.opacity = lerp(0.7, 1.0, Math.sin(t * Math.PI)); // More opaque
 
     positions.forEach((p, i) => {
-      const phase = p.seed * Math.PI * 2;
-      const radius = intensity * 2.5 * p.seed;
+      const currentAngle = p.angle + time * p.speed;
+      const currentRadius = p.radius * lerp(0.9, 1.6, Math.sin(time + i));
+      const currentY = p.height + Math.sin(time * 2 + i) * 0.5;
+
+      // Animate color based on position and time
+      const colorIndex = (p.colorIndex + Math.floor(time * 0.5)) % 4;
+      mat.color.copy(colors[colorIndex]);
+
       dummy.position.set(
-        p.x * radius * 0.4 + Math.sin(time * 3 + phase) * 0.05,
-        p.y * radius * 0.4 + Math.cos(time * 2 + phase) * 0.05,
-        p.z * radius * 0.2,
+        Math.cos(currentAngle) * currentRadius,
+        currentY,
+        Math.sin(currentAngle) * currentRadius,
       );
-      const s = 0.02 + 0.04 * p.seed * intensity;
-      dummy.scale.setScalar(s);
-      dummy.rotation.set(time + p.seed, time * 1.5 + p.seed, 0);
+      
+      // Larger, more visible size with pulsing
+      dummy.scale.setScalar(p.size * (1.2 + 0.8 * Math.sin(time * 3 + i)));
+      dummy.rotation.set(time, currentAngle, 0);
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
     });
@@ -336,7 +405,7 @@ function Sparks({ t }: { t: number }) {
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, mat, SPARK_COUNT]}>
-      <boxGeometry args={[1, 1, 1]} />
+      <sphereGeometry args={[1, 12, 12]} /> {/* Higher quality spheres */}
     </instancedMesh>
   );
 }
@@ -383,18 +452,43 @@ function SceneController({ t }: { t: number }) {
 
   return (
     <>
+      {/* Main Key Light - Bright and dramatic */}
       <spotLight
         ref={keyLightRef}
-        position={[6, 12, 8]}
-        angle={0.6}
-        penumbra={0.4}
+        position={[6, 15, 10]}
+        angle={0.5}
+        penumbra={0.3}
+        intensity={20}
+        color="#ffffff"
         castShadow
-        shadow-mapSize={[1024, 1024]}
+        shadow-mapSize={[2048, 2048]}
       />
-      <pointLight ref={fillLightRef} position={[0, 2, 5]} color="#ffaa00" />
-      <pointLight position={[-6, 4, 4]} color="#00ffaa" intensity={4.0} />
-      <pointLight position={[6, 4, 4]} color="#ff2244" intensity={4.0} />
-      <ambientLight intensity={2.0} color="#ffffff" />
+      
+      {/* Fill Light - Warm golden glow */}
+      <pointLight ref={fillLightRef} position={[0, 3, 6]} color="#fbbf24" intensity={8} />
+      
+      {/* Energon Cyan accent lights - Left and right */}
+      <pointLight position={[-8, 5, 5]} color="#00ffaa" intensity={12} />
+      <pointLight position={[8, 5, 5]} color="#ff2244" intensity={12} />
+      
+      {/* Back rim light - Electric blue highlight */}
+      <pointLight position={[0, 8, -8]} color="#38bdf8" intensity={10} />
+      
+      {/* Top down spotlight - Heroic presentation */}
+      <spotLight
+        position={[0, 20, 0]}
+        angle={0.8}
+        penumbra={0.5}
+        intensity={15}
+        color="#ffffff"
+        castShadow
+      />
+      
+      {/* Underlight - Dramatic floor glow */}
+      <pointLight position={[0, -2, 0]} color="#00f0ff" intensity={6} />
+      
+      {/* Ambient light - Boost overall visibility */}
+      <ambientLight intensity={3.5} color="#e0f7ff" />
     </>
   );
 }
@@ -536,6 +630,27 @@ function HudCallouts({ t }: { t: number }) {
 
 // ─── The 3D scene (inner) ─────────────────────────────────────────────────────
 
+function ModelGroup({ t }: { t: number }) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame(({ clock }) => {
+    if (!groupRef.current) return;
+    const time = clock.getElapsedTime();
+    // Energetic subtle idle rotation + yaw movement as user scrolls
+    groupRef.current.rotation.y = Math.sin(time * 0.4) * 0.18 + (t - 0.5) * 0.5;
+    groupRef.current.position.y = Math.sin(time * 1.5) * 0.08;
+  });
+
+  return (
+    <group ref={groupRef}>
+      {Object.entries(PARTS).map(([name, def]) => (
+        <TransformPart key={name} name={name} def={def} t={t} />
+      ))}
+      <HoloTargetRings t={t} />
+    </group>
+  );
+}
+
 function TransformScene({ t }: { t: number }) {
   return (
     <>
@@ -543,9 +658,7 @@ function TransformScene({ t }: { t: number }) {
       <GridFloor />
       <GroundPlane t={t} />
 
-      {Object.entries(PARTS).map(([name, def]) => (
-        <TransformPart key={name} name={name} def={def} t={t} />
-      ))}
+      <ModelGroup t={t} />
 
       <Sparks t={t} />
     </>
@@ -766,7 +879,7 @@ function TransformerHeroInner({ t }: TransformerHeroInnerProps) {
         height: "100%",
         width: "100%",
         overflow: "hidden",
-        background: "linear-gradient(180deg, #0a0a0f 0%, #0d1117 50%, #0a0a0f 100%)",
+        background: "radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f1a 50%, #050508 100%)",
       }}
     >
       {/* 3D Canvas */}
