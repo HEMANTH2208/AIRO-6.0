@@ -43,7 +43,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [1.6, 2.2, 0.8],
     offset: 0.0, width: 0.35,
-    color: "#1a3a5c",
+    color: "#c8102e", // Optimus Crimson
   },
   // Hood → chest plate
   hood: {
@@ -54,7 +54,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [1.4, 0.8, 0.12],
     offset: 0.12, width: 0.28,
-    color: "#0a2a44", emissive: true,
+    color: "#dc2626", emissive: true, // Bright Crimson chest
   },
   // Roof → head
   roof: {
@@ -65,7 +65,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.95, 0.85, 0.75],
     offset: 0.22, width: 0.22,
-    color: "#1a3a5c",
+    color: "#b91c1c", // Darker Crimson Head
   },
   // Left door → left arm
   doorL: {
@@ -76,7 +76,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0.15],
     robotScale: [0.32, 1.6, 0.32],
     offset: 0.15, width: 0.28,
-    color: "#1e4a70",
+    color: "#2563eb", // Cobalt Blue arm
   },
   // Right door → right arm
   doorR: {
@@ -87,7 +87,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, -0.15],
     robotScale: [0.32, 1.6, 0.32],
     offset: 0.15, width: 0.28,
-    color: "#1e4a70",
+    color: "#2563eb", // Cobalt Blue arm
   },
   // Front-left wheel → left shoulder pad
   wheelFL: {
@@ -98,7 +98,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.55, 0.25, 0.55],
     offset: 0.05, width: 0.3,
-    color: "#102030",
+    color: "#64748b", // Silver Alloy
     geometry: "cylinder",
     cylinderArgs: [0.5, 0.5, 0.3, 12],
   },
@@ -111,7 +111,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.55, 0.25, 0.55],
     offset: 0.05, width: 0.3,
-    color: "#102030",
+    color: "#64748b", // Silver Alloy
     geometry: "cylinder",
     cylinderArgs: [0.5, 0.5, 0.3, 12],
   },
@@ -124,7 +124,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.6, 0.28, 0.6],
     offset: 0.25, width: 0.28,
-    color: "#102030",
+    color: "#475569", // Dark Silver Foot
     geometry: "cylinder",
     cylinderArgs: [0.5, 0.5, 0.3, 12],
   },
@@ -137,11 +137,11 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.6, 0.28, 0.6],
     offset: 0.25, width: 0.28,
-    color: "#102030",
+    color: "#475569", // Dark Silver Foot
     geometry: "cylinder",
     cylinderArgs: [0.5, 0.5, 0.3, 12],
   },
-  // Left leg (new piece that materialises from chassis)
+  // Left leg
   legL: {
     carPos: [-0.45, -0.25, 0.5],
     carRot: [0, 0, 0],
@@ -150,7 +150,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.38, 1.4, 0.38],
     offset: 0.3, width: 0.28,
-    color: "#1a3a5c",
+    color: "#1d4ed8", // Deep Cobalt Leg
   },
   // Right leg
   legR: {
@@ -161,7 +161,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.38, 1.4, 0.38],
     offset: 0.3, width: 0.28,
-    color: "#1a3a5c",
+    color: "#1d4ed8", // Deep Cobalt Leg
   },
   // Windshield → visor/face panel
   windshield: {
@@ -172,7 +172,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.7, 0.28, 0.05],
     offset: 0.24, width: 0.2,
-    color: "#001a33", emissive: true,
+    color: "#00f0ff", emissive: true,
   },
   // Left headlight → left eye
   headlightL: {
@@ -183,7 +183,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.2, 0.14, 0.06],
     offset: 0.28, width: 0.18,
-    color: "#00d4ff", emissive: true,
+    color: "#00f0ff", emissive: true,
     geometry: "sphere",
   },
   // Right headlight → right eye
@@ -195,7 +195,7 @@ const PARTS: Record<string, PartDef> = {
     robotRot: [0, 0, 0],
     robotScale: [0.2, 0.14, 0.06],
     offset: 0.28, width: 0.18,
-    color: "#00d4ff", emissive: true,
+    color: "#00f0ff", emissive: true,
     geometry: "sphere",
   },
 };
@@ -810,20 +810,16 @@ function TransformerHeroInner({ t }: TransformerHeroInnerProps) {
   );
 }
 
-// ─── Exported wrapper — manages scroll state and sticky pinning ─────────────
+// ─── Exported wrapper — full page fixed background animation ─────────────────
 
 export default function TransformerHero() {
   const [t, setT] = useState(0);
-  const triggerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!triggerRef.current) return;
-      const rect = triggerRef.current.getBoundingClientRect();
-      const totalScrollable = rect.height - window.innerHeight;
-      if (totalScrollable <= 0) return;
-      const scrolled = -rect.top;
-      const progress = Math.max(0, Math.min(1, scrolled / totalScrollable));
+      const scrolled = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = Math.max(0, Math.min(1, scrolled / Math.max(maxScroll, 1)));
       setT(progress);
     };
 
@@ -834,25 +830,17 @@ export default function TransformerHero() {
 
   return (
     <div
-      ref={triggerRef}
       style={{
-        height: "250vh",
-        position: "relative",
-        zIndex: 2,
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100vh",
+        zIndex: 0,
+        pointerEvents: "none",
       }}
     >
-      <div
-        style={{
-          position: "sticky",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100vh",
-          overflow: "hidden",
-        }}
-      >
-        <TransformerHeroInner t={t} />
-      </div>
+      <TransformerHeroInner t={t} />
     </div>
   );
 }
