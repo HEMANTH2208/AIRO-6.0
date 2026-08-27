@@ -16,16 +16,28 @@ import {
   Zap,
   Trophy,
   Users,
-  ChevronRight
+  ChevronRight,
+  Gavel,
+  Search,
+  Bot,
+  Rocket,
+  Mic,
+  Palette,
+  Code,
+  FileText,
+  Laptop
 } from "lucide-react";
 
-const EVENT_ICONS: Record<string, string> = {
-  "tech-auction": "💎",
-  "tech-crime-scene": "🧠",
-  "agentic-paradox": "⚡",
-  "prompt-to-product": "🏃",
-  "ai-pitch": "🔥",
-  "vibecraft": "🌿",
+const EVENT_ICONS: Record<string, { emoji: string; component: any }> = {
+  "tech-auction": { emoji: "🤖", component: Gavel },
+  "tech-crime-scene": { emoji: "🔊", component: Search },
+  "agentic-paradox": { emoji: "🦾", component: Bot },
+  "prompt-to-product": { emoji: "⚡", component: Rocket },
+  "ai-pitch": { emoji: "🦖", component: Mic },
+  "vibecraft": { emoji: "⚔️", component: Palette },
+  "code-combat": { emoji: "⚙️", component: Code },
+  "paper-presentation": { emoji: "📡", component: FileText },
+  "workshop": { emoji: "🔧", component: Laptop },
 };
 
 /* Inline Cybertron symbol SVG */

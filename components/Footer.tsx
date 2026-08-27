@@ -40,6 +40,9 @@ export default function Footer() {
               <li><Link href="/events/prompt-to-product">⚡ Bumblebee (Prompt-to-Product)</Link></li>
               <li><Link href="/events/ai-pitch">🦖 Grimlock (AI Pitch)</Link></li>
               <li><Link href="/events/vibecraft">⚔️ Windblade (Design)</Link></li>
+              <li><Link href="/events/code-combat">⚙️ Ironhide (Code Combat)</Link></li>
+              <li><Link href="/events/paper-presentation">📡 Ratchet (Paper Presentation)</Link></li>
+              <li><Link href="/events/workshop">🔧 Wheeljack (Workshop)</Link></li>
             </ul>
           </div>
 

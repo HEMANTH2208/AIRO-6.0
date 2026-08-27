@@ -59,6 +59,9 @@ const EVENT_ICONS: Record<string, string> = {
   "prompt-to-product": "⚡",
   "ai-pitch": "🦖",
   "vibecraft": "⚔️",
+  "code-combat": "⚙️",
+  "paper-presentation": "📡",
+  "workshop": "🔧",
 };
 
 const TRANSFORMER_NAMES: Record<string, string> = {
@@ -68,6 +71,9 @@ const TRANSFORMER_NAMES: Record<string, string> = {
   "prompt-to-product": "Bumblebee",
   "ai-pitch": "Grimlock",
   "vibecraft": "Windblade",
+  "code-combat": "Ironhide",
+  "paper-presentation": "Ratchet",
+  "workshop": "Wheeljack",
 };
 
 export default function HomePage() {

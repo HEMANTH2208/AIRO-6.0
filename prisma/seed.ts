@@ -73,6 +73,33 @@ async function main() {
       min_team_size: 2,
       max_team_size: 2,
     },
+    {
+      name: "Code Combat",
+      slug: "code-combat",
+      description:
+        "A competitive coding challenge conducted in three rounds: R1 – Debugging (Identify and fix errors in given programs), R2 – DSA (Solve algorithmic and data-structure-based problems), R3 – Company Challenge (Problems inspired by coding assessments of companies such as Google, Amazon, TCS, Wipro, CTS, etc.)",
+      duration: "To be announced",
+      min_team_size: 2,
+      max_team_size: 2,
+    },
+    {
+      name: "Paper Presentation",
+      slug: "paper-presentation",
+      description:
+        "Teams present a technical paper on an emerging technology or relevant research topic. Participants present their technical/research paper on an approved topic, followed by evaluation based on technical knowledge, innovation, presentation quality, relevance, and Q&A performance.",
+      duration: "To be announced",
+      min_team_size: 3,
+      max_team_size: 3,
+    },
+    {
+      name: "Workshop",
+      slug: "workshop",
+      description:
+        "An interactive technical workshop focused on a relevant emerging technology. Includes an expert-led technical session with practical demonstrations or hands-on activities. Designed to provide participants with exposure to cutting-edge technologies. Workshop topic will be finalized and announced soon.",
+      duration: "To be announced",
+      min_team_size: 1,
+      max_team_size: 1,
+    },
   ];
 
   for (const event of events) {

@@ -18,21 +18,27 @@ interface Event {
 }
 
 const EVENT_ICONS: Record<string, string> = {
-  "tech-auction": "🏷️",
-  "tech-crime-scene": "🔍",
-  "agentic-paradox": "🤖",
+  "tech-auction": "🤖",
+  "tech-crime-scene": "🔊",
+  "agentic-paradox": "🦾",
   "prompt-to-product": "⚡",
-  "ai-pitch": "🚀",
-  "vibecraft": "🎨",
+  "ai-pitch": "🦖",
+  "vibecraft": "⚔️",
+  "code-combat": "⚙️",
+  "paper-presentation": "📡",
+  "workshop": "🔧",
 };
 
 const EVENT_COLORS: Record<string, string> = {
-  "tech-auction": "linear-gradient(135deg, #6c63ff, #9b59b6)",
-  "tech-crime-scene": "linear-gradient(135deg, #ff6b6b, #ee5a24)",
-  "agentic-paradox": "linear-gradient(135deg, #00d4aa, #0984e3)",
-  "prompt-to-product": "linear-gradient(135deg, #feca57, #ff9f43)",
-  "ai-pitch": "linear-gradient(135deg, #54a0ff, #5f27cd)",
-  "vibecraft": "linear-gradient(135deg, #fd79a8, #e84393)",
+  "tech-auction": "linear-gradient(135deg, #FF6B00, #FF9F43)",
+  "tech-crime-scene": "linear-gradient(135deg, #9B59B6, #8E44AD)",
+  "agentic-paradox": "linear-gradient(135deg, #00D4AA, #00B894)",
+  "prompt-to-product": "linear-gradient(135deg, #FECA57, #FFC312)",
+  "ai-pitch": "linear-gradient(135deg, #54A0FF, #2E86DE)",
+  "vibecraft": "linear-gradient(135deg, #FD79A8, #E84393)",
+  "code-combat": "linear-gradient(135deg, #00CEC9, #00B894)",
+  "paper-presentation": "linear-gradient(135deg, #6C5CE7, #A29BFE)",
+  "workshop": "linear-gradient(135deg, #FDCB6E, #E17055)",
 };
 
 async function getEvents(): Promise<Event[]> {
