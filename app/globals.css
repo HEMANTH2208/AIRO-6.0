@@ -19,12 +19,12 @@
   --faction-grimlock: #ff5500;
   --faction-windblade: #ff1a40;
 
-  /* Backgrounds — Glassy Mechanical Space */
-  --bg-base: rgba(6, 8, 12, 0.55);
-  --bg-surface: rgba(10, 14, 20, 0.68);
-  --bg-card: rgba(15, 22, 34, 0.78);
-  --bg-elevated: rgba(21, 31, 48, 0.85);
-  --bg-hover: rgba(27, 40, 61, 0.9);
+  /* Backgrounds — Solid with good contrast over 3D animation */
+  --bg-base: #060c14;
+  --bg-surface: #0a0e14;
+  --bg-card: #0f1622;
+  --bg-elevated: #151f30;
+  --bg-hover: #1b283d;
 
   /* Text */
   --text-primary: #e6f7ff;
@@ -45,10 +45,10 @@
   --info: #00d4ff;
   --info-bg: rgba(0, 212, 255, 0.08);
 
-  /* Gradients */
+  /* Gradients - Solid backgrounds for content */
   --gradient-primary: linear-gradient(135deg, #00d4ff 0%, #0066ff 100%);
-  --gradient-hero: linear-gradient(135deg, rgba(6, 8, 12, 0.4) 0%, rgba(8, 16, 26, 0.4) 100%);
-  --gradient-card: linear-gradient(145deg, rgba(15, 22, 34, 0.78), rgba(21, 31, 48, 0.78));
+  --gradient-hero: linear-gradient(135deg, #060c14 0%, #081a26 100%);
+  --gradient-card: linear-gradient(145deg, #0f1622 0%, #151f30 100%);
   --gradient-accent: linear-gradient(135deg, #00d4ff 0%, #ffaa00 100%);
   --gradient-cybertron: linear-gradient(135deg, #00d4ff, #0066ff, #00d4ff);
 
@@ -139,8 +139,17 @@ p { color: var(--text-secondary); }
   position: relative;
 }
 
-.section { padding: 5rem 0; }
-.section-sm { padding: 3rem 0; }
+.section { 
+  padding: 5rem 0; 
+  position: relative;
+  background: var(--bg-base);
+}
+
+.section-sm { 
+  padding: 3rem 0; 
+  position: relative;
+  background: var(--bg-base);
+}
 
 /* ========== NAVBAR — CYBERTRON COMMAND BAR ========== */
 .navbar {
