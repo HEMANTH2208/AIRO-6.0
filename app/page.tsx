@@ -30,9 +30,8 @@ const TransformerHero = dynamic(() => import("@/components/TransformerHero"), {
 
 // Detect if we should use the lightweight fallback
 function shouldUseFallback(): boolean {
-  if (typeof window === "undefined") return true;
+  if (typeof window === "undefined") return false;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
-  if (navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency <= 2) return true;
   // Check for WebGL support
   try {
     const canvas = document.createElement("canvas");
@@ -102,7 +101,7 @@ export default function HomePage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [totalTeams, setTotalTeams] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [useFallback, setUseFallback] = useState(true); // default true (SSR safe)
+  const [useFallback, setUseFallback] = useState(false);
 
   // Auth Form States
   const [isLoginTab, setIsLoginTab] = useState(true);

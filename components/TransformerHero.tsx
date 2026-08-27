@@ -810,37 +810,49 @@ function TransformerHeroInner({ t }: TransformerHeroInnerProps) {
   );
 }
 
-// ─── Exported wrapper — manages scroll state and lazy loading ─────────────────
+// ─── Exported wrapper — manages scroll state and sticky pinning ─────────────
 
 export default function TransformerHero() {
   const [t, setT] = useState(0);
+  const triggerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrolled = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = Math.min(scrolled / Math.max(maxScroll, 1), 1);
+      if (!triggerRef.current) return;
+      const rect = triggerRef.current.getBoundingClientRect();
+      const totalScrollable = rect.height - window.innerHeight;
+      if (totalScrollable <= 0) return;
+      const scrolled = -rect.top;
+      const progress = Math.max(0, Math.min(1, scrolled / totalScrollable));
       setT(progress);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial calc
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <div
+      ref={triggerRef}
       style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100vh",
-        zIndex: 0,
-        pointerEvents: "none",
+        height: "250vh",
+        position: "relative",
+        zIndex: 2,
       }}
     >
-      <TransformerHeroInner t={t} />
+      <div
+        style={{
+          position: "sticky",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100vh",
+          overflow: "hidden",
+        }}
+      >
+        <TransformerHeroInner t={t} />
+      </div>
     </div>
   );
 }
