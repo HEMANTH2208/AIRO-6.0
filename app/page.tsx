@@ -3,6 +3,22 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { downloadQRCard } from "@/lib/clientDownload";
+import { motion } from "framer-motion";
+import { 
+  Zap, 
+  Calendar, 
+  MapPin, 
+  Trophy, 
+  Users, 
+  CheckCircle, 
+  Download,
+  ArrowRight,
+  Sparkles,
+  Target,
+  Rocket,
+  Globe,
+  Clock
+} from "lucide-react";
 
 interface Event {
   id: number;
@@ -37,12 +53,21 @@ interface User {
 }
 
 const EVENT_ICONS: Record<string, string> = {
-  "tech-auction": "🏷️",
-  "tech-crime-scene": "🔍",
-  "agentic-paradox": "🤖",
-  "prompt-to-product": "⚡",
-  "ai-pitch": "🚀",
-  "vibecraft": "🎨",
+  "tech-auction": "💎",
+  "tech-crime-scene": "🧠",
+  "agentic-paradox": "⚡",
+  "prompt-to-product": "🏃",
+  "ai-pitch": "🔥",
+  "vibecraft": "🌿",
+};
+
+const ALIEN_NAMES: Record<string, string> = {
+  "tech-auction": "Diamondhead",
+  "tech-crime-scene": "Grey Matter",
+  "agentic-paradox": "Upgrade",
+  "prompt-to-product": "XLR8",
+  "ai-pitch": "Heatblast",
+  "vibecraft": "Wildvine",
 };
 
 export default function HomePage() {
@@ -188,7 +213,7 @@ export default function HomePage() {
     return (
       <div className="page-loading">
         <div className="page-loading-spinner" />
-        <p>Loading AIRO 6.0...</p>
+        <p>Initializing Omnitrix...</p>
       </div>
     );
   }
@@ -199,20 +224,27 @@ export default function HomePage() {
       <div className="section" style={{ minHeight: "calc(100vh - var(--nav-height))", display: "flex", alignItems: "center" }}>
         <div className="container" style={{ maxWidth: "460px" }}>
           <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            <h1 style={{ fontSize: "2.2rem", fontWeight: 800, background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", marginBottom: "0.25rem" }}>
+            {/* Omnitrix Hourglass */}
+            <div style={{ margin: "0 auto 1rem", width: "60px", height: "60px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg viewBox="0 0 40 40" width="50" height="50" style={{ filter: "drop-shadow(0 0 12px rgba(57, 255, 20, 0.5))" }}>
+                <circle cx="20" cy="20" r="18" fill="none" stroke="rgba(57, 255, 20, 0.3)" strokeWidth="1.5" />
+                <polygon points="10,8 30,8 22,20 30,32 10,32 18,20" fill="none" stroke="#39FF14" strokeWidth="2" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <h1 style={{ fontSize: "2.2rem", fontWeight: 900, background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", marginBottom: "0.25rem", letterSpacing: "0.08em" }}>
               AIRO 6.0
             </h1>
-            <p style={{ fontSize: "0.88rem", color: "var(--text-muted)" }}>
-              Sairam Engineering College · Dept. of AI & DS
+            <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontFamily: "var(--font-heading)", letterSpacing: "0.04em" }}>
+              Omnitrix Calibration Required
             </p>
           </div>
 
           <div className="card" style={{ padding: "2rem" }}>
             {isForgotPassword ? (
               <div>
-                <h3 style={{ fontSize: "1.3rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.5rem" }}>Forgot Password?</h3>
+                <h3 style={{ fontSize: "1.3rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "0.5rem", fontFamily: "var(--font-heading)" }}>Reset Omnitrix Credentials</h3>
                 <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginBottom: "1.5rem" }}>
-                  Enter your email address and a new password below to update your account credentials.
+                  Enter your Plumber ID and new passcode to recalibrate access.
                 </p>
 
                 {authError && <div className="alert alert-error" style={{ marginBottom: "1rem", fontSize: "0.85rem" }}>{authError}</div>}
@@ -358,7 +390,7 @@ export default function HomePage() {
   // 2. RENDER MAIN SYMPOSIUM CONTENT AND PROFILE IF LOGGED IN
   return (
     <>
-      {/* HERO */}
+      {/* HERO — THE OMNITRIX AWAKENS */}
       <section className="hero">
         <div className="hero-shapes">
           <div className="shape shape-1" />
@@ -366,39 +398,73 @@ export default function HomePage() {
           <div className="shape shape-3" />
         </div>
         <div className="container">
-          <div className="hero-content">
-            <div className="hero-badge">
-              <span>🎓</span>
-              Sairam Engineering College
-            </div>
-            <div className="hero-title">
+          <motion.div 
+            className="hero-content"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <motion.div 
+              className="hero-badge"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.4 }}
+            >
+              <span style={{ display: "flex", alignItems: "center" }}>
+                <Sparkles size={14} style={{ marginRight: "0.5rem" }} />
+                Omnitrix Online — Sairam Engineering College
+              </span>
+            </motion.div>
+            <motion.div 
+              className="hero-title"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+            >
               <div className="gradient-text">AIRO 6.0</div>
-            </div>
-            <p style={{ fontSize: "0.95rem", color: "var(--text-muted)", marginBottom: "0.25rem", fontWeight: 600 }}>
-              Department of Artificial Intelligence and Data Science
+            </motion.div>
+            <p style={{ fontSize: "0.95rem", color: "var(--text-muted)", marginBottom: "0.25rem", fontWeight: 700, fontFamily: "var(--font-heading)", letterSpacing: "0.04em" }}>
+              The Omnitrix Symposium · Dept. of AI & Data Science
             </p>
-            <p className="hero-subtitle">
-              Experience the future of technology at AIRO 6.0 — our annual technical symposium
-              featuring AI, data science, and cutting-edge tech competitions. Open to all students.
-              All events are FREE. Welcome, <strong>{user.name}</strong>!
-            </p>
-            <div className="hero-actions">
-              <Link href="/register" className="btn btn-primary btn-xl">
-                ✦ Register Now
+            <motion.p 
+              className="hero-subtitle"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+            >
+              Every hero needs a transformation. Choose your alien form, assemble your squad,
+              and compete in 6 epic challenges. The Omnitrix is fully charged.
+              Welcome, Hero <strong>{user.name}</strong>!
+            </motion.p>
+            <motion.div 
+              className="hero-actions"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+            >
+              <Link href="/register" className="btn btn-primary btn-xl" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <Zap size={20} />
+                Transform Now
               </Link>
-              <Link href="/events" className="btn btn-secondary btn-xl">
-                View Events →
+              <Link href="/events" className="btn btn-secondary btn-xl" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                Alien Arsenal
+                <ArrowRight size={20} />
               </Link>
-            </div>
+            </motion.div>
 
-            <div className="hero-stats">
+            <motion.div 
+              className="hero-stats"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+            >
               <div className="hero-stat-item">
                 <div className="hero-stat-value">{events.length}</div>
-                <div className="hero-stat-label">Events</div>
+                <div className="hero-stat-label">Alien Forms</div>
               </div>
               <div className="hero-stat-item">
                 <div className="hero-stat-value">{totalTeams > 0 ? totalTeams + "+" : "Open"}</div>
-                <div className="hero-stat-label">Teams Registered</div>
+                <div className="hero-stat-label">Heroes Registered</div>
               </div>
               <div className="hero-stat-item">
                 <div className="hero-stat-value">FREE</div>
@@ -406,47 +472,78 @@ export default function HomePage() {
               </div>
               <div className="hero-stat-item">
                 <div className="hero-stat-value">1 Day</div>
-                <div className="hero-stat-label">Symposium</div>
+                <div className="hero-stat-label">Mission</div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* INFO BANNER */}
-      <div style={{ background: "rgba(108,99,255,0.08)", borderTop: "1px solid rgba(108,99,255,0.2)", borderBottom: "1px solid rgba(108,99,255,0.2)", padding: "0.85rem 0" }}>
+      {/* INFO BANNER — OMNITRIX STATUS */}
+      <div style={{ background: "rgba(57, 255, 20, 0.04)", borderTop: "1px solid rgba(57, 255, 20, 0.15)", borderBottom: "1px solid rgba(57, 255, 20, 0.15)", padding: "0.85rem 0" }}>
         <div className="container" style={{ display: "flex", gap: "2rem", justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
-          <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>📅 Event Date: 08.10.26 (Thursday)</span>
+          <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <Calendar size={16} />
+            Mission Date: 08.10.26 (Thursday)
+          </span>
           <span style={{ color: "var(--border)" }}>|</span>
-          <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>🏫 Sairam Engineering College, Chennai</span>
+          <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <MapPin size={16} />
+            Sairam Engineering College, Chennai
+          </span>
           <span style={{ color: "var(--border)" }}>|</span>
-          <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>🆓 All Events are FREE</span>
+          <span style={{ fontSize: "0.85rem", color: "var(--primary)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <Sparkles size={16} />
+            All Transformations FREE
+          </span>
           <span style={{ color: "var(--border)" }}>|</span>
-          <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>👥 Team-based Registration</span>
+          <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <Users size={16} />
+            Squad-based Registration
+          </span>
         </div>
       </div>
 
       {/* MY PROFILE & REGISTRATIONS SECTION */}
       <section className="section" style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border)" }}>
         <div className="container">
-          <div className="section-header">
-            <div className="section-label">👤 Profile Dashboard</div>
-            <h2 className="section-title">My Registered Events</h2>
+          <motion.div 
+            className="section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="section-label" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <Trophy size={14} />
+              Hero Registry
+            </div>
+            <h2 className="section-title">Active Transformations</h2>
             <p className="section-subtitle">
-              Listed below are the technical events you have registered for. Download your digital entry pass card to present at the check-in counters.
+              Your registered alien forms are listed below. Download your Omnitrix ID card to present at the mission briefing.
             </p>
-          </div>
+          </motion.div>
 
           {registrations.length > 0 ? (
             <div className="grid-2">
-              {registrations.map((reg) => (
-                <div key={reg.registration_id} className="card" style={{ display: "flex", flexDirection: "column", gap: "1rem", position: "relative" }}>
+              {registrations.map((reg, index) => (
+                <motion.div 
+                  key={reg.registration_id} 
+                  className="card" 
+                  style={{ display: "flex", flexDirection: "column", gap: "1rem", position: "relative" }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  whileHover={{ y: -5, boxShadow: "0 0 30px rgba(57, 255, 20, 0.2)" }}
+                >
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", borderBottom: "1px solid var(--border)", paddingBottom: "0.75rem" }}>
                     <div>
                       <div style={{ fontSize: "0.75rem", color: "var(--primary-light)", fontWeight: 700 }}>{reg.registration_id}</div>
                       <h3 style={{ fontSize: "1.2rem", color: "var(--text-primary)", marginTop: "0.2rem" }}>{reg.event_name}</h3>
                     </div>
-                    <span className={`badge ${reg.checked_in ? "badge-success" : "badge-info"}`}>
+                    <span className={`badge ${reg.checked_in ? "badge-success" : "badge-info"}`} style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                      <CheckCircle size={12} />
                       {reg.checked_in ? "Checked In" : "Confirmed"}
                     </span>
                   </div>
@@ -455,11 +552,16 @@ export default function HomePage() {
                     <div>Team Name: <strong>{reg.team_name}</strong></div>
                     <div>College: <strong>{reg.college_name}</strong></div>
                     <div>Department: <strong>{reg.department}</strong></div>
-                    <div>Registered members: <strong>{reg.participantsCount}</strong></div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                      <Users size={14} />
+                      Registered members: <strong>{reg.participantsCount}</strong>
+                    </div>
                   </div>
 
                   <div style={{ marginTop: "auto", paddingTop: "1rem" }}>
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       className="btn btn-primary btn-lg btn-block"
                       style={{
                         padding: "0.85rem 1.5rem",
@@ -476,20 +578,30 @@ export default function HomePage() {
                       }}
                       onClick={() => handleDownloadPass(reg)}
                     >
-                      ↓ Download Entry Pass
-                    </button>
+                      <Download size={20} />
+                      Download Omnitrix ID
+                    </motion.button>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           ) : (
-            <div style={{ textAlign: "center", padding: "4rem 2rem", background: "rgba(26, 26, 53, 0.2)", borderRadius: "var(--radius-lg)", border: "2px dashed var(--border)" }}>
-              <span style={{ fontSize: "2.5rem", display: "block", marginBottom: "0.5rem" }}>🎟️</span>
-              <p style={{ color: "var(--text-muted)" }}>You have not registered for any events yet.</p>
-              <Link href="/register" className="btn btn-primary btn-sm" style={{ marginTop: "1rem" }}>
-                Browse & Register Now
+            <motion.div 
+              style={{ textAlign: "center", padding: "4rem 2rem", background: "rgba(26, 26, 53, 0.2)", borderRadius: "var(--radius-lg)", border: "2px dashed var(--border)" }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <span style={{ fontSize: "2.5rem", display: "block", marginBottom: "0.5rem" }}>
+                <Zap size={40} style={{ display: "inline-block" }} />
+              </span>
+              <p style={{ color: "var(--text-muted)" }}>No active transformations. Your Omnitrix awaits calibration.</p>
+              <Link href="/register" className="btn btn-primary btn-sm" style={{ marginTop: "1rem", display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
+                <Zap size={16} />
+                Choose Your Alien Form
               </Link>
-            </div>
+            </motion.div>
           )}
         </div>
       </section>
@@ -497,39 +609,68 @@ export default function HomePage() {
       {/* EVENTS SECTION */}
       <section className="section">
         <div className="container">
-          <div className="section-header">
-            <div className="section-label">⚡ Competition Events</div>
-            <h2 className="section-title">Choose Your Challenge</h2>
+          <motion.div 
+            className="section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="section-label" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <Zap size={14} />
+              Alien Arsenal
+            </div>
+            <h2 className="section-title">Choose Your Transformation</h2>
             <p className="section-subtitle">
-              Six unique events designed to test your technical skills, creativity, and teamwork.
-              Register your team and compete with the best.
+              Six alien forms, each with unique powers. Pick your transformation,
+              assemble your squad, and prove you&apos;re the ultimate hero.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid-3">
-            {events.map((event) => (
-              <div key={event.id} className="event-card">
-                <div className="event-icon">{EVENT_ICONS[event.slug] || "🎯"}</div>
+            {events.map((event, index) => (
+              <motion.div 
+                key={event.id} 
+                className="event-card"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                whileHover={{ 
+                  y: -8,
+                  transition: { duration: 0.2 }
+                }}
+              >
+                <motion.div 
+                  className="event-icon"
+                  whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {EVENT_ICONS[event.slug] || "🎯"}
+                </motion.div>
                 <div className="event-name">{event.name}</div>
                 <p className="event-desc">{event.description}</p>
                 <div className="event-meta">
-                  <span className="event-meta-item">⏱ {event.duration}</span>
-                  <span className="event-meta-item">
-                    👥 {event.min_team_size === event.max_team_size
+                  <span className="event-meta-item" style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                    <Clock size={12} /> {event.duration}
+                  </span>
+                  <span className="event-meta-item" style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                    <Users size={12} /> {event.min_team_size === event.max_team_size
                       ? `${event.min_team_size} members`
                       : `${event.min_team_size}–${event.max_team_size} members`}
                   </span>
                   <span className="event-free-badge">FREE</span>
                 </div>
                 <div style={{ display: "flex", gap: "0.75rem", marginTop: "auto" }}>
-                  <Link href={`/events/${event.slug}`} className="btn btn-secondary btn-sm" style={{ flex: 1 }}>
+                  <Link href={`/events/${event.slug}`} className="btn btn-secondary btn-sm" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "0.35rem" }}>
                     View Details
                   </Link>
-                  <Link href={`/register?event=${event.id}`} className="btn btn-primary btn-sm" style={{ flex: 1 }}>
+                  <Link href={`/register?event=${event.id}`} className="btn btn-primary btn-sm" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: "0.35rem" }}>
                     Register
+                    <ArrowRight size={14} />
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -538,24 +679,51 @@ export default function HomePage() {
       {/* HOW IT WORKS */}
       <section className="section-sm" style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
         <div className="container">
-          <div className="section-header">
-            <div className="section-label">📋 Process</div>
-            <h2 className="section-title">How to Register</h2>
-          </div>
+          <motion.div 
+            className="section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="section-label" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <Target size={14} />
+              Protocol
+            </div>
+            <h2 className="section-title">Omnitrix Calibration</h2>
+          </motion.div>
           <div className="grid-4">
             {[
-              { step: "01", icon: "🎯", title: "Select Event", desc: "Browse events and pick your competition" },
-              { step: "02", icon: "👥", title: "Form Your Team", desc: "Assemble your team as per event requirements" },
-              { step: "03", icon: "📝", title: "Fill Details", desc: "Enter team and participant information" },
-              { step: "04", icon: "🎫", title: "Get QR Pass", desc: "Receive your registration ID and QR code" },
-            ].map((item) => (
-              <div key={item.step} className="card" style={{ textAlign: "center" }}>
-                <div style={{ fontSize: "2rem", marginBottom: "0.75rem" }}>{item.icon}</div>
-                <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "var(--primary-light)", letterSpacing: "0.1em", marginBottom: "0.35rem" }}>STEP {item.step}</div>
-                <h4 style={{ marginBottom: "0.5rem" }}>{item.title}</h4>
-                <p style={{ fontSize: "0.85rem" }}>{item.desc}</p>
-              </div>
-            ))}
+              { step: "01", icon: Zap, title: "Choose Alien", desc: "Browse the arsenal and pick your transformation" },
+              { step: "02", icon: Users, title: "Form Squad", desc: "Assemble your team of heroes" },
+              { step: "03", icon: Globe, title: "Enter DNA", desc: "Input hero and squad information" },
+              { step: "04", icon: Rocket, title: "Activate", desc: "Receive your Omnitrix ID and QR code" },
+            ].map((item, index) => {
+              const IconComponent = item.icon;
+              return (
+                <motion.div 
+                  key={item.step} 
+                  className="card" 
+                  style={{ textAlign: "center" }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  whileHover={{ y: -5 }}
+                >
+                  <motion.div 
+                    style={{ fontSize: "2rem", marginBottom: "0.75rem", display: "flex", justifyContent: "center" }}
+                    whileHover={{ scale: 1.1, rotate: 360 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <IconComponent size={32} style={{ color: "var(--primary)" }} />
+                  </motion.div>
+                  <div style={{ fontSize: "0.7rem", fontWeight: 800, color: "var(--primary)", letterSpacing: "0.1em", marginBottom: "0.35rem", fontFamily: "var(--font-heading)" }}>PHASE {item.step}</div>
+                  <h4 style={{ marginBottom: "0.5rem" }}>{item.title}</h4>
+                  <p style={{ fontSize: "0.85rem" }}>{item.desc}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>

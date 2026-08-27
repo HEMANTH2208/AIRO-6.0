@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { Clock, Users, CheckCircle, XCircle, ArrowRight, Eye } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -108,24 +109,36 @@ export default async function EventsPage() {
                     <p style={{ marginBottom: "1rem", lineHeight: 1.7 }}>{event.description}</p>
 
                     <div className="event-meta">
-                      <span className="event-meta-item">⏱ {event.duration}</span>
-                      <span className="event-meta-item">
-                        👥 {event.min_team_size === event.max_team_size
+                      <span className="event-meta-item" style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                        <Clock size={14} /> {event.duration}
+                      </span>
+                      <span className="event-meta-item" style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                        <Users size={14} /> {event.min_team_size === event.max_team_size
                           ? `${event.min_team_size} members`
                           : `${event.min_team_size}–${event.max_team_size} members`}
                       </span>
-                      <span className={`badge ${event.status === "active" ? "badge-success" : "badge-warning"}`}>
-                        {event.status === "active" ? "✓ Open" : "Closed"}
+                      <span className={`badge ${event.status === "active" ? "badge-success" : "badge-warning"}`} style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                        {event.status === "active" ? (
+                          <>
+                            <CheckCircle size={12} /> Open
+                          </>
+                        ) : (
+                          <>
+                            <XCircle size={12} /> Closed
+                          </>
+                        )}
                       </span>
                     </div>
 
                     <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.25rem", flexWrap: "wrap" }}>
-                      <Link href={`/events/${event.slug}`} className="btn btn-outline btn-sm">
+                      <Link href={`/events/${event.slug}`} className="btn btn-outline btn-sm" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <Eye size={16} />
                         View Details & Rules
                       </Link>
                       {event.status === "active" && (
-                        <Link href={`/register?event=${event.id}`} className="btn btn-primary btn-sm">
-                          Register →
+                        <Link href={`/register?event=${event.id}`} className="btn btn-primary btn-sm" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          Register
+                          <ArrowRight size={16} />
                         </Link>
                       )}
                     </div>

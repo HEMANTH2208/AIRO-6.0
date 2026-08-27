@@ -5,16 +5,16 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 
 const NAV = [
-  { section: "Overview" },
+  { section: "Mission Control" },
   { href: "/admin/dashboard", icon: "📊", label: "Dashboard" },
-  { section: "Management" },
-  { href: "/admin/events", icon: "🎯", label: "Events" },
+  { section: "Alien Registry" },
+  { href: "/admin/events", icon: "⚡", label: "Events" },
   { href: "/admin/registrations", icon: "📋", label: "Registrations" },
-  { href: "/admin/teams", icon: "👥", label: "Teams" },
-  { href: "/admin/participants", icon: "👤", label: "Participants" },
-  { section: "Operations" },
-  { href: "/admin/qr-verify", icon: "📷", label: "QR Verify / Check-in" },
-  { href: "/admin/export", icon: "📥", label: "Excel Export" },
+  { href: "/admin/teams", icon: "👥", label: "Squads" },
+  { href: "/admin/participants", icon: "🦸", label: "Heroes" },
+  { section: "Field Ops" },
+  { href: "/admin/qr-verify", icon: "🔍", label: "QR Scanner" },
+  { href: "/admin/export", icon: "📥", label: "Data Extract" },
 ];
 
 export default function AdminSidebar() {
@@ -24,7 +24,7 @@ export default function AdminSidebar() {
     <aside className="admin-sidebar">
       <div className="admin-sidebar-logo">
         <div className="brand">AIRO 6.0</div>
-        <div className="sub">Admin Panel</div>
+        <div className="sub">Plumber HQ</div>
       </div>
 
       <ul className="sidebar-nav">
@@ -48,13 +48,13 @@ export default function AdminSidebar() {
 
       <div style={{ padding: "1rem 0.75rem", borderTop: "1px solid var(--border)", marginTop: "auto" }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.82rem", color: "var(--text-muted)", padding: "0.5rem", marginBottom: "0.35rem" }}>
-          ← Back to Site
+          ← Back to Field
         </Link>
         <button
           onClick={() => signOut({ callbackUrl: "/admin/login" })}
           style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.82rem", color: "var(--error)", width: "100%", background: "none", border: "none", cursor: "pointer", padding: "0.5rem", borderRadius: "var(--radius-sm)" }}
         >
-          🚪 Sign Out
+          🚪 Deactivate
         </button>
       </div>
     </aside>
