@@ -173,6 +173,11 @@ temp/
 # Seed script outputs
 seed-direct.mjs
 
+# Test scripts
+test_sheets.mjs
+test_sheets2.mjs
+test_*.mjs
+
 # Documentation (optional - uncomment if you don't want to deploy docs)
 # SETUP.md
 # GETTING_STARTED.md

@@ -35,10 +35,12 @@ interface RegistrationRow {
 }
 
 /**
- * Initialize Google Sheets API client
+ * Initialize Google Sheets API client using GoogleAuth credentials object.
+ * This avoids the OpenSSL 3.x "DECODER routines::unsupported" error that
+ * occurs when passing a PKCS#8 PEM key directly to google.auth.JWT.
  */
 function getGoogleSheetsClient() {
-  const privateKey = process.env.GOOGLE_SHEETS_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  let privateKey = process.env.GOOGLE_SHEETS_PRIVATE_KEY;
   const clientEmail = process.env.GOOGLE_SHEETS_CLIENT_EMAIL;
 
   if (!privateKey || !clientEmail) {
@@ -47,9 +49,26 @@ function getGoogleSheetsClient() {
     );
   }
 
-  const auth = new google.auth.JWT({
-    email: clientEmail,
-    key: privateKey,
+  // Normalize newlines: replace literal \n sequences if the key has no real newlines yet.
+  if (!privateKey.includes("\n")) {
+    privateKey = privateKey.replace(/\\n/g, "\n");
+  }
+
+  // Strip surrounding quotes that some env parsers add
+  privateKey = privateKey.replace(/^["']|["']$/g, "").trim();
+
+  if (!privateKey.startsWith("-----BEGIN")) {
+    throw new Error(
+      "GOOGLE_SHEETS_PRIVATE_KEY is not a valid PEM key. Ensure it starts with -----BEGIN PRIVATE KEY-----"
+    );
+  }
+
+  // Use GoogleAuth with a credentials object — compatible with OpenSSL 3.x / Node 18+
+  const auth = new google.auth.GoogleAuth({
+    credentials: {
+      client_email: clientEmail,
+      private_key: privateKey,
+    },
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
 
