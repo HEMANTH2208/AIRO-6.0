@@ -158,6 +158,10 @@ Environments: ✅ Production ✅ Preview ✅ Development
 ```
 
 ### Variable 9: GOOGLE_SHEETS_PRIVATE_KEY (SPECIAL HANDLING!)
+
+⚠️ **IMPORTANT: Vercel handles this DIFFERENTLY than .env.local!**
+
+**For Vercel (Multi-line format):**
 ```
 Key:   GOOGLE_SHEETS_PRIVATE_KEY
 Value: (Click "Expand" icon for multi-line mode, then paste:)
@@ -194,12 +198,15 @@ jbTVG6yb3OZ0wc4GPghLsQ==
 Environments: ✅ Production ✅ Preview ✅ Development
 ```
 
-**CRITICAL:**
+**CRITICAL for Vercel:**
 1. Click the small **↗️ Expand** icon next to the value field
 2. This opens multi-line mode
 3. Paste the ENTIRE key including BEGIN/END lines
-4. Ensure all line breaks are preserved
-5. Do NOT add quotes or escape characters
+4. Each line of the key should be on its own line (use actual line breaks, NOT `\n`)
+5. Vercel will handle the conversion automatically
+6. Do NOT add quotes or escape characters
+
+**Note:** Your `.env.local` file uses `\n` escape sequences (single line), but Vercel needs actual line breaks (multi-line). This is normal - they use different formats!
 
 ### Variable 10: GOOGLE_SHEETS_CLIENT_EMAIL
 ```
