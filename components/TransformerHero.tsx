@@ -204,7 +204,12 @@ const PARTS: Record<string, PartDef> = {
 
 function TransformPart({ def, t, name }: { def: PartDef; t: number; name: string }) {
   const meshRef = useRef<THREE.Mesh>(null);
-  const pt = partT(t, def.offset, def.width);
+  
+  // Adjust t to account for rotation phase (0-0.25)
+  // Transformation only happens from t=0.25 to t=1.0
+  // Map t: 0-0.25 → adjustedT=0, 0.25-1.0 → adjustedT scales from 0-1
+  const adjustedT = t < 0.25 ? 0 : (t - 0.25) / 0.75;
+  const pt = partT(adjustedT, def.offset, def.width);
 
   // Materials
   const mat = useMemo(() => {
@@ -267,9 +272,9 @@ function TransformPart({ def, t, name }: { def: PartDef; t: number; name: string
       lerp(def.carScale[2], def.robotScale[2], pt),
     );
 
-    // Emissive intensity ramps up as robot forms
+    // Emissive intensity ramps up as robot forms (use adjustedT)
     if (def.emissive && mat instanceof THREE.MeshStandardMaterial) {
-      mat.emissiveIntensity = lerp(0, 1.8, Math.max(0, (t - 0.65) / 0.35));
+      mat.emissiveIntensity = lerp(0, 1.8, Math.max(0, (adjustedT - 0.65) / 0.35));
     }
   });
 
@@ -329,84 +334,6 @@ function HoloTargetRings({ t }: { t: number }) {
         <ringGeometry args={[1.2, 1.35, 24]} />
       </mesh>
     </group>
-  );
-}
-
-// ─── Helical Spark Energy Vortex ──────────────────────────────────────────────
-
-const SPARK_COUNT = 200; // Increased from 120
-
-function Sparks({ t }: { t: number }) {
-  const meshRef = useRef<THREE.InstancedMesh>(null);
-
-  const positions = useMemo(() => {
-    return Array.from({ length: SPARK_COUNT }, () => ({
-      radius: 1.5 + Math.random() * 3.5, // Wider spread
-      angle: Math.random() * Math.PI * 2,
-      height: (Math.random() - 0.5) * 6, // Taller spread
-      speed: 0.3 + Math.random() * 1.2,
-      size: 0.05 + Math.random() * 0.1, // Larger sparks
-      colorIndex: Math.floor(Math.random() * 4), // 4 color options
-    }));
-  }, []);
-
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-  
-  // Create vibrant glowing material
-  const mat = useMemo(
-    () =>
-      new THREE.MeshBasicMaterial({
-        color: new THREE.Color("#00ffaa"),
-        transparent: true,
-        opacity: 0.9,
-      }),
-    [],
-  );
-
-  // Color palette for particles
-  const colors = useMemo(() => [
-    new THREE.Color("#00ffaa"), // Neon green
-    new THREE.Color("#00f0ff"), // Energon cyan
-    new THREE.Color("#fbbf24"), // Golden yellow
-    new THREE.Color("#ff2244"), // Crimson red
-  ], []);
-
-  useFrame(({ clock }) => {
-    const mesh = meshRef.current;
-    if (!mesh) return;
-
-    const time = clock.getElapsedTime();
-    mat.opacity = lerp(0.7, 1.0, Math.sin(t * Math.PI)); // More opaque
-
-    positions.forEach((p, i) => {
-      const currentAngle = p.angle + time * p.speed;
-      const currentRadius = p.radius * lerp(0.9, 1.6, Math.sin(time + i));
-      const currentY = p.height + Math.sin(time * 2 + i) * 0.5;
-
-      // Animate color based on position and time
-      const colorIndex = (p.colorIndex + Math.floor(time * 0.5)) % 4;
-      mat.color.copy(colors[colorIndex]);
-
-      dummy.position.set(
-        Math.cos(currentAngle) * currentRadius,
-        currentY,
-        Math.sin(currentAngle) * currentRadius,
-      );
-      
-      // Larger, more visible size with pulsing
-      dummy.scale.setScalar(p.size * (1.2 + 0.8 * Math.sin(time * 3 + i)));
-      dummy.rotation.set(time, currentAngle, 0);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(i, dummy.matrix);
-    });
-
-    mesh.instanceMatrix.needsUpdate = true;
-  });
-
-  return (
-    <instancedMesh ref={meshRef} args={[undefined, mat, SPARK_COUNT]}>
-      <sphereGeometry args={[1, 12, 12]} /> {/* Higher quality spheres */}
-    </instancedMesh>
   );
 }
 
@@ -636,9 +563,19 @@ function ModelGroup({ t }: { t: number }) {
   useFrame(({ clock }) => {
     if (!groupRef.current) return;
     const time = clock.getElapsedTime();
-    // Energetic subtle idle rotation + yaw movement as user scrolls
-    groupRef.current.rotation.y = Math.sin(time * 0.4) * 0.18 + (t - 0.5) * 0.5;
-    groupRef.current.position.y = Math.sin(time * 1.5) * 0.08;
+    
+    // Phase 1 (t=0 to t=0.25): Full 360° rotation of car before transformation
+    // Phase 2 (t=0.25 to t=1.0): Transform into robot with subtle idle rotation
+    if (t < 0.25) {
+      // During first 25% of scroll: Complete 360° rotation (2π radians)
+      const rotationProgress = t / 0.25; // 0 → 1 over first 25%
+      groupRef.current.rotation.y = rotationProgress * Math.PI * 2; // 0 → 2π
+      groupRef.current.position.y = Math.sin(time * 1.5) * 0.08; // Subtle hover
+    } else {
+      // After rotation complete: Idle rotation + yaw movement during transformation
+      groupRef.current.rotation.y = Math.sin(time * 0.4) * 0.18 + (t - 0.5) * 0.5;
+      groupRef.current.position.y = Math.sin(time * 1.5) * 0.08;
+    }
   });
 
   return (
@@ -660,7 +597,7 @@ function TransformScene({ t }: { t: number }) {
 
       <ModelGroup t={t} />
 
-      <Sparks t={t} />
+      {/* Sparks component removed - was causing unattractive rain effect */}
     </>
   );
 }

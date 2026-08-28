@@ -14,7 +14,7 @@ const NAV = [
   { href: "/admin/participants", icon: "🤖", label: "Transformers" },
   { section: "Field Ops" },
   { href: "/admin/qr-verify", icon: "🔍", label: "QR Scanner" },
-  { href: "/admin/export", icon: "📥", label: "Data Extract" },
+  { href: "/admin/export", icon: "☁️", label: "Google Sheets" },
 ];
 
 export default function AdminSidebar() {
